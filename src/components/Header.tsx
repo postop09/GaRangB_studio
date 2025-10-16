@@ -1,6 +1,7 @@
 'use client';
 
 import { PageType } from '@/types';
+import Image from 'next/image';
 
 interface HeaderProps {
   currentPage: PageType;
@@ -9,35 +10,56 @@ interface HeaderProps {
 
 export default function Header({ currentPage, onNavigate }: HeaderProps) {
   return (
-    <header className="bg-white shadow-md sticky top-0 z-10">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
-        <h1 className="text-3xl font-extrabold tracking-tight text-gray-900">
-          <span className="text-gray-600">My Photo Studio</span>
-        </h1>
-        <nav className="flex space-x-4">
+    <header className="bg-[#faf8f5] border-b border-[#e8ddd4] sticky top-0 z-100 backdrop-blur-sm bg-opacity-95">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex justify-between items-center">
+        {/* 브랜드 로고 영역 */}
+        <div className="flex items-center space-x-4">
+          {/* 브랜드 로고 */}
+          <div className="rounded-full border-2 border-[#2c2c2c] flex items-center justify-center bg-white overflow-hidden">
+            <Image
+              src="/img/img_logo.png"
+              alt="Ga.Rang.B Logo"
+              width={40}
+              height={40}
+              priority
+            />
+          </div>
+
+          {/* 브랜드명 */}
+          <div>
+            <h1 className="font-brand text-2xl font-semibold text-[#2c2c2c] tracking-tight">
+              Ga.Rang.B
+            </h1>
+            <p className="font-brand-subtitle text-xs text-[#6b6b6b]">
+              Stories in Pictures
+            </p>
+          </div>
+        </div>
+
+        {/* 네비게이션 */}
+        <nav className="flex space-x-2">
           <button
             onClick={() => onNavigate('main')}
-            className={`text-lg font-medium transition duration-150 ease-in-out px-3 py-1 rounded-lg ${
+            className={`font-medium transition-all duration-300 ease-in-out px-6 py-3 rounded-full text-sm ${
               currentPage === 'main'
-                ? 'text-gray-900 bg-gray-100'
-                : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+                ? 'text-[#2c2c2c] bg-[#e8ddd4] shadow-sm'
+                : 'text-[#6b6b6b] hover:text-[#2c2c2c] hover:bg-[#f5f1eb]'
             }`}
           >
-            메인 갤러리
+            포트폴리오
           </button>
           <button
             onClick={() => onNavigate('wall')}
-            className={`text-lg font-medium transition duration-150 ease-in-out px-3 py-1 rounded-lg ${
+            className={`font-medium transition-all duration-300 ease-in-out px-6 py-3 rounded-full text-sm ${
               currentPage === 'wall'
-                ? 'text-pink-800 bg-pink-100'
-                : 'text-pink-600 hover:text-pink-800 hover:bg-pink-100'
+                ? 'text-[#2c2c2c] bg-[#e8ddd4] shadow-sm'
+                : 'text-[#6b6b6b] hover:text-[#2c2c2c] hover:bg-[#f5f1eb]'
             }`}
           >
-            벽 꾸미기
+            갤러리 꾸미기
           </button>
         </nav>
       </div>
     </header>
   );
 }
-

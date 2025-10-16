@@ -1,29 +1,46 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
 @import 'tailwindcss';
 
 :root {
-  --background: #f7f7f7;
-  --foreground: #333;
+  /* Ga.Rang.B 브랜드 컬러 팔레트 */
+  --background: #faf8f5; /* 크림색 배경 */
+  --foreground: #2c2c2c; /* 진한 회색 텍스트 */
+  --accent-cream: #f5f1eb; /* 연한 크림 */
+  --accent-beige: #e8ddd4; /* 베이지 */
+  --accent-brown: #8b7355; /* 따뜻한 브라운 */
+  --accent-dark: #1a1a1a; /* 진한 검정 */
+  --text-muted: #6b6b6b; /* 중간 회색 */
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: 'Inter', sans-serif;
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-accent-cream: var(--accent-cream);
+  --color-accent-beige: var(--accent-beige);
+  --color-accent-brown: var(--accent-brown);
+  --color-accent-dark: var(--accent-dark);
+  --color-text-muted: var(--text-muted);
+  --font-serif: var(--font-playfair);
+  --font-sans: var(--font-inter);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-inter);
+  line-height: 1.6;
+}
+
+/* 브랜드 타이포그래피 */
+.font-brand {
+  font-family: var(--font-playfair);
+  font-weight: 600;
+}
+
+.font-brand-subtitle {
+  font-family: var(--font-inter);
+  font-weight: 400;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
 }
 
 /* 커스텀 스크롤바 */
@@ -32,6 +49,36 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: #ccc;
+  background-color: var(--accent-brown);
   border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--accent-dark);
+}
+
+/* 브랜드 애니메이션 */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+/* 부드러운 호버 효과 */
+.hover-lift {
+  transition: all 0.3s ease;
+}
+
+.hover-lift:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
 }

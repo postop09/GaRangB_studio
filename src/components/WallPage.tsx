@@ -171,40 +171,52 @@ export default function WallPage({
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
-      <h3 className="text-4xl font-bold text-gray-800 mb-6">
-        나만의 엽서 벽 꾸미기 (Wall Decor Preview)
-      </h3>
+      {/* 페이지 헤더 */}
+      <div className="text-center mb-12 animate-fade-in-up">
+        <h3 className="font-brand text-4xl font-semibold text-[#2c2c2c] mb-4">
+          나만의 갤러리 꾸미기
+        </h3>
+        <p className="font-brand-subtitle text-sm text-[#6b6b6b] max-w-2xl mx-auto">
+          사진 속 이야기들을 담은 엽서들로 나만의 감성적인 공간을 만들어보세요
+        </p>
+      </div>
 
       {/* 설정 및 도구 영역 */}
-      <div className="flex flex-col md:flex-row gap-4 mb-6 p-4 bg-white rounded-xl shadow-md">
+      <div className="flex flex-col md:flex-row gap-6 mb-8 p-6 bg-white rounded-2xl shadow-sm border border-[#e8ddd4] hover-lift">
         {/* 배경색 설정 */}
-        <div className="flex items-center space-x-3">
-          <label htmlFor="wall-color" className="font-medium text-gray-700">
-            벽 배경색:
+        <div className="flex items-center space-x-4">
+          <label
+            htmlFor="wall-color"
+            className="font-medium text-[#2c2c2c] text-sm"
+          >
+            갤러리 배경:
           </label>
-          <input
-            type="color"
-            id="wall-color"
-            value={wallColor}
-            onChange={e => updateWallColor(e.target.value)}
-            className="w-10 h-10 rounded-full border-2 border-gray-300 cursor-pointer"
-          />
+          <div className="flex items-center space-x-3">
+            <input
+              type="color"
+              id="wall-color"
+              value={wallColor}
+              onChange={e => updateWallColor(e.target.value)}
+              className="w-12 h-12 rounded-full border-2 border-[#e8ddd4] cursor-pointer hover:border-[#8b7355] transition-colors"
+            />
+            <span className="text-xs text-[#6b6b6b]">색상 선택</span>
+          </div>
         </div>
 
         {/* 초기화 버튼 */}
         <button
           onClick={resetWall}
-          className="py-2 px-4 bg-red-100 text-red-600 rounded-lg hover:bg-red-200 transition duration-150 ease-in-out font-medium"
+          className="py-3 px-6 bg-[#f5f1eb] text-[#8b7355] rounded-full hover:bg-[#e8ddd4] hover:text-[#2c2c2c] transition-all duration-300 ease-in-out font-medium text-sm border border-[#e8ddd4] hover:border-[#8b7355]"
         >
-          전체 초기화
+          갤러리 초기화
         </button>
       </div>
 
-      {/* 벽 캔버스 */}
+      {/* 갤러리 캔버스 */}
       <div
         ref={canvasRef}
         id="wall-canvas"
-        className="bg-gray-100 rounded-xl shadow-inner min-h-[500px] border-2 border-gray-300 relative overflow-hidden"
+        className="rounded-2xl shadow-inner min-h-[600px] border border-[#e8ddd4] relative overflow-hidden bg-gradient-to-br from-[#faf8f5] to-[#f5f1eb]"
         style={{ backgroundColor: wallColor }}
       >
         {wallPostcards.map(postcard => {
@@ -223,7 +235,7 @@ export default function WallPage({
           return (
             <div
               key={postcard.instanceId}
-              className="draggable-postcard absolute transition-shadow duration-100 ease-in-out p-1 bg-white shadow-xl rounded-lg cursor-grab touch-none"
+              className="draggable-postcard absolute transition-all duration-300 ease-in-out p-2 bg-white shadow-lg rounded-xl cursor-grab touch-none hover:shadow-xl border border-[#f0f0f0] hover-lift"
               style={{
                 width: `${postcardWidth}px`,
                 height: `${postcardHeight}px`,
@@ -254,9 +266,9 @@ export default function WallPage({
                   e.stopPropagation();
                   removeWallPostcard(postcard.instanceId);
                 }}
-                className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center text-sm font-bold opacity-80 hover:opacity-100 transition duration-150"
+                className="absolute -top-2 -right-2 w-7 h-7 bg-[#8b7355] text-white rounded-full flex items-center justify-center text-xs font-medium opacity-90 hover:opacity-100 hover:bg-[#2c2c2c] transition-all duration-200 shadow-md"
               >
-                X
+                ×
               </button>
               {/* 회전 핸들 */}
               <button
@@ -264,7 +276,7 @@ export default function WallPage({
                   e.stopPropagation();
                   rotateWallPostcard(postcard.instanceId);
                 }}
-                className="absolute -bottom-2 -left-2 w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-sm font-bold opacity-80 hover:opacity-100 transition duration-150"
+                className="absolute -bottom-2 -left-2 w-7 h-7 bg-[#6b6b6b] text-white rounded-full flex items-center justify-center text-xs font-medium opacity-90 hover:opacity-100 hover:bg-[#8b7355] transition-all duration-200 shadow-md"
               >
                 ↻
               </button>

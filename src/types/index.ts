@@ -4,6 +4,7 @@ export interface Postcard {
   theme: string;
   price: number;
   image: string;
+  description: string;
 }
 
 export interface WallPostcard {
@@ -17,4 +18,3 @@ export interface WallPostcard {
 }
 
 export type PageType = 'main' | 'wall';
-
