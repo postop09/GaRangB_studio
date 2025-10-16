@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect, useCallback } from 'react';
+import Image from 'next/image';
 import { WallPostcard } from '@/types';
 
 interface WallPageProps {
@@ -235,10 +236,13 @@ export default function WallPage({
               onMouseDown={dragStart}
               onTouchStart={dragStart}
             >
-              <img
+              <Image
                 src={postcard.image}
                 alt={postcard.title}
-                className="w-full h-full object-cover rounded-md"
+                fill
+                className="object-cover rounded-md select-none"
+                draggable={false}
+                style={{ userSelect: 'none' }}
                 onError={e => {
                   const target = e.target as HTMLImageElement;
                   target.src = `https://placehold.co/150x210/999999/FFFFFF?text=${postcard.title}`;
