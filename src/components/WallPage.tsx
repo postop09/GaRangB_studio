@@ -30,7 +30,7 @@ export default function WallPage({
   onUpdateWallPostcards,
   onRemovePostcard,
 }: WallPageProps) {
-  const [wallColor, setWallColor] = useState('#faf8f5');
+  const [wallColor, setWallColor] = useState('#fff');
   const canvasRef = useRef<HTMLDivElement>(null);
   const dragState = useRef<DragState>({
     activeItem: null,
@@ -80,7 +80,7 @@ export default function WallPage({
       if (postcard.instanceId === instanceId) {
         return {
           ...postcard,
-          rotation: (postcard.rotation + 15) % 360,
+          rotation: (postcard.rotation + 90) % 360,
         };
       }
       return postcard;
@@ -364,10 +364,10 @@ export default function WallPage({
         ref={canvasRef}
         id="wall-canvas"
         className={`wall-canvas rounded-2xl shadow-inner min-h-[600px] border border-[#e8ddd4] relative overflow-hidden ${
-          wallColor === '#faf8f5' ? 'default-bg' : ''
+          wallColor === '#fff' ? 'default-bg' : ''
         }`}
         style={{
-          backgroundColor: wallColor === '#faf8f5' ? undefined : wallColor,
+          backgroundColor: wallColor === '#fff' ? undefined : wallColor,
         }}
       >
         {wallPostcards.map(postcard => {
@@ -417,7 +417,7 @@ export default function WallPage({
                   e.stopPropagation();
                   removeWallPostcard(postcard.instanceId);
                 }}
-                className="absolute -top-2 -right-2 w-7 h-7 bg-[#8b7355] text-white rounded-full flex items-center justify-center text-xs font-medium opacity-90 hover:opacity-100 hover:bg-[#2c2c2c] transition-all duration-200 shadow-md"
+                className="absolute top-1 right-1 w-6 h-6 bg-[#8b7355] text-white rounded-full flex items-center justify-center text-xs font-medium opacity-90 hover:opacity-100 hover:bg-[#2c2c2c] transition-all duration-200 shadow-md"
               >
                 ×
               </button>
@@ -427,14 +427,14 @@ export default function WallPage({
                   e.stopPropagation();
                   rotateWallPostcard(postcard.instanceId);
                 }}
-                className="absolute -bottom-2 -left-2 w-7 h-7 bg-[#6b6b6b] text-white rounded-full flex items-center justify-center text-xs font-medium opacity-90 hover:opacity-100 hover:bg-[#8b7355] transition-all duration-200 shadow-md"
+                className="absolute top-1 left-1 w-6 h-6 bg-[#6b6b6b] text-white rounded-full flex items-center justify-center text-xs font-medium opacity-90 hover:opacity-100 hover:bg-[#8b7355] transition-all duration-200 shadow-md"
               >
                 ↻
               </button>
 
               {/* 크기 조절 핸들 (우하단만) */}
               <div
-                className="absolute bottom-0 right-0 w-5 h-5 bg-[#8b7355] border-2 border-white rounded-full cursor-se-resize resize-handle opacity-80 hover:opacity-100 transition-opacity duration-200"
+                className="absolute bottom-1 right-1 w-4 h-4 bg-[#8b7355] border-2 border-white rounded-full cursor-se-resize resize-handle opacity-80 hover:opacity-100 transition-opacity duration-200"
                 data-handle="se"
                 onMouseDown={dragStart}
                 onTouchStart={dragStart}

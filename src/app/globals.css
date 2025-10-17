@@ -100,11 +100,7 @@ body {
 }
 
 .wall-canvas.default-bg {
-  background: linear-gradient(
-    135deg,
-    var(--background) 0%,
-    var(--accent-cream) 100%
-  );
+  background: linear-gradient(135deg, var(--background) 0%, #fff 100%);
 }
 
 /* 버튼 스타일 개선 */
