@@ -1,5 +1,3 @@
-'use client';
-
 import { PostcardGrid } from '@/shared/ui';
 import { postcardsData } from '@/shared';
 

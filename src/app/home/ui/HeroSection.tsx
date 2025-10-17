@@ -3,13 +3,11 @@ import { BaseComponentProps } from '@/shared/types';
 interface HeroSectionProps extends BaseComponentProps {
   title: string;
   subtitle: string;
-  description: string;
 }
 
 function HeroSection({
   title,
   subtitle,
-  description,
   'data-testid': testId,
 }: HeroSectionProps) {
   return (
@@ -34,14 +32,24 @@ function HeroSection({
           </p>
 
           {/* 메인 타이틀 */}
-          <h1 className="font-brand text-5xl md:text-7xl lg:text-8xl font-bold text-[#2c2c2c] mb-8 leading-tight">
+          <h2 className="font-brand text-5xl md:text-7xl lg:text-8xl font-bold text-[#2c2c2c] mb-8 leading-tight">
             {title}
-          </h1>
+          </h2>
 
           {/* 설명 */}
           <div className="font-brand-subtitle text-lg md:text-xl text-[#6b6b6b] leading-relaxed whitespace-pre-line">
-            {description}
+            한 장의 사진 속에
+            <br />
+            <span className="text-[#8b7355] font-bold">
+              이야기, 시간, 감정, 기억
+            </span>
+            을 담아
           </div>
+          <p className="text-md text-[#6b6b6b] max-w-2xl mx-auto leading-relaxed">
+            찍는 사진가 Ga.Rang.B의 포트폴리오와 엽서 컬렉션을 만나보세요.
+            <br />각 순간의 소중한 이야기들이 담긴 사진들로 특별한 기억을
+            만들어보세요.
+          </p>
         </div>
       </div>
 
