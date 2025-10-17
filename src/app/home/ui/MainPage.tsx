@@ -1,13 +1,13 @@
 'use client';
 
-import { postcardsData } from '@/data/postcards';
+import { postcardsData } from '@/shared/data/postcards';
 import Image from 'next/image';
 
 interface MainPageProps {
   onAddToWall: (id: number, image: string, title: string) => void;
 }
 
-export default function MainPage({ onAddToWall }: MainPageProps) {
+export function MainPage({ onAddToWall }: MainPageProps) {
   return (
     <>
       {/* 브랜드 히어로 섹션 */}

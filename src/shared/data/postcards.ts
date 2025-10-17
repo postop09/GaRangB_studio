@@ -1,4 +1,4 @@
-import { Postcard } from '@/types';
+import { Postcard } from '../types';
 
 export const postcardsData: Postcard[] = [
   {

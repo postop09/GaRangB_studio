@@ -1,12 +1,3 @@
-export interface Postcard {
-  id: number;
-  title: string;
-  theme: string;
-  price: number;
-  image: string;
-  description: string;
-}
-
 export interface WallPostcard {
   instanceId: number;
   postcardId: number;
@@ -18,5 +9,3 @@ export interface WallPostcard {
   width?: number;
   height?: number;
 }
-
-export type PageType = 'main' | 'wall';

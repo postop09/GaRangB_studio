@@ -1,6 +1,6 @@
 'use client';
 
-import { PageType } from '@/types';
+import { PageType } from '@/shared/types';
 import Image from 'next/image';
 
 interface HeaderProps {
@@ -8,7 +8,7 @@ interface HeaderProps {
   onNavigate: (page: PageType) => void;
 }
 
-export default function Header({ currentPage, onNavigate }: HeaderProps) {
+export function Header({ currentPage, onNavigate }: HeaderProps) {
   return (
     <header className="bg-[#faf8f5] border-b border-[#e8ddd4] sticky top-0 z-100 backdrop-blur-sm bg-opacity-95">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex justify-between items-center">
