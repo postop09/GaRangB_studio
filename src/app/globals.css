@@ -75,10 +75,43 @@ body {
 
 /* 부드러운 호버 효과 */
 .hover-lift {
-  transition: all 0.3s ease;
+  /* transition을 호버 시에만 적용 */
 }
 
 .hover-lift:hover {
   transform: translateY(-2px);
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.draggable-postcard:hover {
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  transition: box-shadow 0.3s ease;
+}
+
+/* 드래그 중에는 모든 transition 비활성화 */
+.draggable-postcard.dragging {
+  transition: none !important;
+}
+
+/* 갤러리 캔버스 스타일 */
+.wall-canvas {
+  background: var(--background);
+}
+
+.wall-canvas.default-bg {
+  background: linear-gradient(
+    135deg,
+    var(--background) 0%,
+    var(--accent-cream) 100%
+  );
+}
+
+/* 버튼 스타일 개선 */
+.btn-primary {
+  @apply py-3 px-6 bg-[var(--accent-cream)] text-[var(--accent-brown)] rounded-full hover:bg-[var(--accent-beige)] hover:text-[var(--foreground)] transition-all duration-300 ease-in-out font-medium text-sm border border-[var(--accent-beige)] hover:border-[var(--accent-brown)];
+}
+
+.btn-secondary {
+  @apply py-3 px-6 bg-[var(--accent-brown)] text-white rounded-full hover:bg-[var(--accent-dark)] transition-all duration-300 ease-in-out font-medium text-sm shadow-md;
 }

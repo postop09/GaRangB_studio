@@ -1,6 +1,5 @@
 'use client';
 
-import { Postcard } from '@/types';
 import { postcardsData } from '@/data/postcards';
 import Image from 'next/image';
 
@@ -74,7 +73,7 @@ export default function MainPage({ onAddToWall }: MainPageProps) {
           {postcardsData.map((postcard, index) => (
             <div
               key={postcard.id}
-              className="group bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-500 overflow-hidden border border-[#f0f0f0] hover-lift"
+              className="group bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-500 overflow-hidden border border-[#f0f0f0] hover-lift animate-fade-in-up"
               style={{
                 animationDelay: `${index * 0.1}s`,
               }}
@@ -121,7 +120,7 @@ export default function MainPage({ onAddToWall }: MainPageProps) {
                   onClick={() =>
                     onAddToWall(postcard.id, postcard.image, postcard.title)
                   }
-                  className="w-full py-3 bg-[#f5f1eb] text-[#8b7355] rounded-full hover:bg-[#e8ddd4] hover:text-[#2c2c2c] transition-all duration-300 font-medium text-sm border border-[#e8ddd4] hover:border-[#8b7355] group-hover:shadow-md"
+                  className="w-full btn-primary group-hover:shadow-md"
                 >
                   갤러리에 배치하기
                 </button>

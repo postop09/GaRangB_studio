@@ -2,7 +2,8 @@
 
 import { useState, useRef, useEffect, useCallback } from 'react';
 import Image from 'next/image';
-import { WallPostcard } from '@/types';
+import { Postcard, WallPostcard } from '@/types';
+import { postcardsData } from '@/data/postcards';
 
 interface WallPageProps {
   wallPostcards: WallPostcard[];
@@ -18,6 +19,10 @@ interface DragState {
   initialY: number;
   xOffset: number;
   yOffset: number;
+  isResizing: boolean;
+  resizeHandle: string | null;
+  initialWidth: number;
+  initialHeight: number;
 }
 
 export default function WallPage({
@@ -25,7 +30,7 @@ export default function WallPage({
   onUpdateWallPostcards,
   onRemovePostcard,
 }: WallPageProps) {
-  const [wallColor, setWallColor] = useState('#f0f0f0');
+  const [wallColor, setWallColor] = useState('#faf8f5');
   const canvasRef = useRef<HTMLDivElement>(null);
   const dragState = useRef<DragState>({
     activeItem: null,
@@ -35,19 +40,39 @@ export default function WallPage({
     initialY: 0,
     xOffset: 0,
     yOffset: 0,
+    isResizing: false,
+    resizeHandle: null,
+    initialWidth: 0,
+    initialHeight: 0,
   });
 
   const updateWallColor = (color: string) => {
     setWallColor(color);
+    console.log('Wall color updated to:', color); // 디버깅용
   };
 
   const resetWall = () => {
     onUpdateWallPostcards([]);
-    setWallColor('#f0f0f0');
+    setWallColor('#faf8f5');
   };
 
   const removeWallPostcard = (instanceId: number) => {
     onRemovePostcard(instanceId);
+  };
+
+  const addPostcardToGallery = (postcard: Postcard) => {
+    const newPostcard: WallPostcard = {
+      instanceId: Date.now() + Math.random(),
+      postcardId: postcard.id,
+      image: postcard.image,
+      title: postcard.title,
+      x: 50 + wallPostcards.length * 20,
+      y: 50 + wallPostcards.length * 20,
+      rotation: 0,
+      width: 150,
+      height: 210,
+    };
+    onUpdateWallPostcards([...wallPostcards, newPostcard]);
   };
 
   const rotateWallPostcard = (instanceId: number) => {
@@ -64,13 +89,46 @@ export default function WallPage({
   };
 
   const dragStart = (e: React.MouseEvent | React.TouchEvent) => {
-    const item = (e.target as HTMLElement).closest(
-      '.draggable-postcard'
-    ) as HTMLElement;
+    const target = e.target as HTMLElement;
+
+    // 크기 조절 핸들 클릭 확인
+    if (target.classList.contains('resize-handle')) {
+      e.preventDefault();
+      e.stopPropagation();
+
+      const item = target.closest('.draggable-postcard') as HTMLElement;
+      if (!item || !canvasRef.current) return;
+
+      dragState.current.activeItem = item;
+      dragState.current.isResizing = true;
+      dragState.current.resizeHandle = 'se'; // 우하단 핸들만 사용
+      item.style.zIndex = '100';
+      item.classList.add('dragging');
+
+      // 초기 크기 저장
+      const currentWidth = parseInt(item.style.width, 10);
+      const currentHeight = parseInt(item.style.height, 10);
+      dragState.current.initialWidth = currentWidth;
+      dragState.current.initialHeight = currentHeight;
+
+      const canvasRect = canvasRef.current.getBoundingClientRect();
+      const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
+      const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY;
+
+      dragState.current.initialX = clientX - canvasRect.left;
+      dragState.current.initialY = clientY - canvasRect.top;
+
+      return;
+    }
+
+    // 일반 드래그 시작
+    const item = target.closest('.draggable-postcard') as HTMLElement;
     if (!item || !canvasRef.current) return;
 
     dragState.current.activeItem = item;
+    dragState.current.isResizing = false;
     item.style.zIndex = '100';
+    item.classList.add('dragging');
 
     const canvasRect = canvasRef.current.getBoundingClientRect();
     const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
@@ -92,6 +150,7 @@ export default function WallPage({
   const dragEnd = useCallback(() => {
     if (dragState.current.activeItem) {
       dragState.current.activeItem.style.zIndex = '10';
+      dragState.current.activeItem.classList.remove('dragging');
 
       const instanceId = parseInt(
         dragState.current.activeItem.dataset.instanceId || '0',
@@ -101,18 +160,37 @@ export default function WallPage({
 
       if (index > -1) {
         const updatedPostcards = [...wallPostcards];
-        updatedPostcards[index].x = parseInt(
-          dragState.current.activeItem!.style.left,
-          10
-        );
-        updatedPostcards[index].y = parseInt(
-          dragState.current.activeItem!.style.top,
-          10
-        );
+
+        if (dragState.current.isResizing) {
+          // 크기 조절 완료
+          updatedPostcards[index].width = parseInt(
+            dragState.current.activeItem!.style.width,
+            10
+          );
+          updatedPostcards[index].height = parseInt(
+            dragState.current.activeItem!.style.height,
+            10
+          );
+        } else {
+          // 일반 드래그 완료
+          updatedPostcards[index].x = parseInt(
+            dragState.current.activeItem!.style.left,
+            10
+          );
+          updatedPostcards[index].y = parseInt(
+            dragState.current.activeItem!.style.top,
+            10
+          );
+        }
+
         onUpdateWallPostcards(updatedPostcards);
       }
     }
+
+    // 상태 초기화
     dragState.current.activeItem = null;
+    dragState.current.isResizing = false;
+    dragState.current.resizeHandle = null;
   }, [wallPostcards, onUpdateWallPostcards]);
 
   const drag = useCallback((e: MouseEvent | TouchEvent) => {
@@ -128,25 +206,53 @@ export default function WallPage({
     const canvasX = clientX - canvasRect.left;
     const canvasY = clientY - canvasRect.top;
 
-    // 새로운 아이템 위치 계산 (offset을 빼서 클릭한 지점이 그대로 유지되도록)
-    let newX = canvasX - dragState.current.xOffset;
-    let newY = canvasY - dragState.current.yOffset;
+    if (dragState.current.isResizing && dragState.current.resizeHandle) {
+      // 크기 조절 로직
+      const deltaX = canvasX - dragState.current.initialX;
 
-    // 캔버스 경계 내로 제한
-    const itemWidth = dragState.current.activeItem.offsetWidth;
-    const itemHeight = dragState.current.activeItem.offsetHeight;
+      let newWidth = dragState.current.initialWidth;
+      let newHeight = dragState.current.initialHeight;
 
-    newX = Math.max(
-      0,
-      Math.min(newX, canvasRef.current.offsetWidth - itemWidth)
-    );
-    newY = Math.max(
-      0,
-      Math.min(newY, canvasRef.current.offsetHeight - itemHeight)
-    );
+      // 우하단 핸들만 사용하고 비율 유지
+      const aspectRatio =
+        dragState.current.initialWidth / dragState.current.initialHeight;
 
-    dragState.current.activeItem.style.left = `${newX}px`;
-    dragState.current.activeItem.style.top = `${newY}px`;
+      // X축 변화량을 기준으로 비율에 맞춰 크기 계산
+      newWidth = Math.max(
+        80,
+        Math.min(300, dragState.current.initialWidth + deltaX)
+      );
+      newHeight = newWidth / aspectRatio;
+
+      // 최소/최대 높이 제한
+      newHeight = Math.max(112, Math.min(420, newHeight));
+      // 높이 제한에 맞춰 너비 재계산
+      newWidth = newHeight * aspectRatio;
+
+      dragState.current.activeItem.style.width = `${newWidth}px`;
+      dragState.current.activeItem.style.height = `${newHeight}px`;
+    } else {
+      // 일반 드래그 로직
+      // 새로운 아이템 위치 계산 (offset을 빼서 클릭한 지점이 그대로 유지되도록)
+      let newX = canvasX - dragState.current.xOffset;
+      let newY = canvasY - dragState.current.yOffset;
+
+      // 캔버스 경계 내로 제한
+      const itemWidth = dragState.current.activeItem.offsetWidth;
+      const itemHeight = dragState.current.activeItem.offsetHeight;
+
+      newX = Math.max(
+        0,
+        Math.min(newX, canvasRef.current.offsetWidth - itemWidth)
+      );
+      newY = Math.max(
+        0,
+        Math.min(newY, canvasRef.current.offsetHeight - itemHeight)
+      );
+
+      dragState.current.activeItem.style.left = `${newX}px`;
+      dragState.current.activeItem.style.top = `${newY}px`;
+    }
   }, []);
 
   // 드래그 이벤트 핸들러 관리
@@ -204,24 +310,69 @@ export default function WallPage({
         </div>
 
         {/* 초기화 버튼 */}
-        <button
-          onClick={resetWall}
-          className="py-3 px-6 bg-[#f5f1eb] text-[#8b7355] rounded-full hover:bg-[#e8ddd4] hover:text-[#2c2c2c] transition-all duration-300 ease-in-out font-medium text-sm border border-[#e8ddd4] hover:border-[#8b7355]"
-        >
+        <button onClick={resetWall} className="btn-primary">
           갤러리 초기화
         </button>
+      </div>
+
+      {/* 엽서 선택 섹션 */}
+      <div className="mb-8 p-6 bg-white rounded-2xl shadow-sm border border-[#e8ddd4] hover-lift">
+        <h4 className="font-brand text-xl font-semibold text-[#2c2c2c] mb-4">
+          엽서 선택하기
+        </h4>
+        <p className="text-sm text-[#6b6b6b] mb-6">
+          아래 엽서를 클릭하여 갤러리에 추가할 수 있습니다
+        </p>
+
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+          {postcardsData.map(postcard => (
+            <div
+              key={postcard.id}
+              className="group cursor-pointer"
+              onClick={() => addPostcardToGallery(postcard)}
+            >
+              <div className="relative aspect-[3/4] overflow-hidden rounded-lg border-2 border-[#e8ddd4] hover:border-[#8b7355] transition-all duration-300 hover:shadow-lg">
+                <Image
+                  src={postcard.image}
+                  alt={postcard.title}
+                  fill
+                  className="object-cover group-hover:scale-105 transition-transform duration-300"
+                  onError={e => {
+                    const target = e.target as HTMLImageElement;
+                    target.src = `https://placehold.co/150x200/999999/FFFFFF?text=${postcard.title}`;
+                  }}
+                />
+                {/* 호버 오버레이 */}
+                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-all duration-300 flex items-center justify-center">
+                  <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <div className="bg-white/90 text-[#8b7355] px-3 py-1 rounded-full text-xs font-medium">
+                      추가하기
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <p className="text-xs text-[#6b6b6b] mt-2 text-center truncate">
+                {postcard.title}
+              </p>
+            </div>
+          ))}
+        </div>
       </div>
 
       {/* 갤러리 캔버스 */}
       <div
         ref={canvasRef}
         id="wall-canvas"
-        className="rounded-2xl shadow-inner min-h-[600px] border border-[#e8ddd4] relative overflow-hidden bg-gradient-to-br from-[#faf8f5] to-[#f5f1eb]"
-        style={{ backgroundColor: wallColor }}
+        className={`wall-canvas rounded-2xl shadow-inner min-h-[600px] border border-[#e8ddd4] relative overflow-hidden ${
+          wallColor === '#faf8f5' ? 'default-bg' : ''
+        }`}
+        style={{
+          backgroundColor: wallColor === '#faf8f5' ? undefined : wallColor,
+        }}
       >
         {wallPostcards.map(postcard => {
-          const postcardWidth = 150;
-          const postcardHeight = 210;
+          const postcardWidth = postcard.width || 150;
+          const postcardHeight = postcard.height || 210;
 
           const initialX = Math.min(
             Math.max(postcard.x, 0),
@@ -235,7 +386,7 @@ export default function WallPage({
           return (
             <div
               key={postcard.instanceId}
-              className="draggable-postcard absolute transition-all duration-300 ease-in-out p-2 bg-white shadow-lg rounded-xl cursor-grab touch-none hover:shadow-xl border border-[#f0f0f0] hover-lift"
+              className="draggable-postcard absolute p-2 bg-white shadow-lg rounded-xl cursor-grab touch-none hover:shadow-xl border border-[#f0f0f0] hover-lift"
               style={{
                 width: `${postcardWidth}px`,
                 height: `${postcardHeight}px`,
@@ -280,6 +431,14 @@ export default function WallPage({
               >
                 ↻
               </button>
+
+              {/* 크기 조절 핸들 (우하단만) */}
+              <div
+                className="absolute bottom-0 right-0 w-5 h-5 bg-[#8b7355] border-2 border-white rounded-full cursor-se-resize resize-handle opacity-80 hover:opacity-100 transition-opacity duration-200"
+                data-handle="se"
+                onMouseDown={dragStart}
+                onTouchStart={dragStart}
+              />
             </div>
           );
         })}

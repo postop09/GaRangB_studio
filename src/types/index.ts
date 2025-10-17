@@ -15,6 +15,8 @@ export interface WallPostcard {
   x: number;
   y: number;
   rotation: number;
+  width?: number;
+  height?: number;
 }
 
 export type PageType = 'main' | 'wall';
