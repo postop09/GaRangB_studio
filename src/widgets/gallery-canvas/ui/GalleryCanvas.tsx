@@ -2,13 +2,15 @@
 
 import { useState, useRef, useEffect, useCallback } from 'react';
 import Image from 'next/image';
-import { WallPostcard } from '@/shared/types';
-import { DragState } from '@/features/drag-and-drop/model';
+import type { WallPostcard, DragState, Size } from '@/shared/types';
+import { APP_CONFIG } from '@/shared/config/constants';
 import {
-  POSTCARD_CONFIG,
-  WALL_CONFIG,
-  UI_CONFIG,
-} from '@/shared/config/constants';
+  clampPositionToBounds,
+  clampSizeToBounds,
+  getFallbackImageUrl,
+  getNextRotation,
+  cn,
+} from '@/shared/lib/utils';
 
 interface GalleryCanvasProps {
   wallPostcards: WallPostcard[];
@@ -16,6 +18,10 @@ interface GalleryCanvasProps {
   onUpdateWallPostcards: (postcards: WallPostcard[]) => void;
   onRemovePostcard: (instanceId: number) => void;
   onRotatePostcard: (instanceId: number) => void;
+  onSelectPostcard?: (instanceId: number) => void;
+  selectedPostcardId?: number;
+  className?: string;
+  'data-testid'?: string;
 }
 
 export function GalleryCanvas({
@@ -24,6 +30,10 @@ export function GalleryCanvas({
   onUpdateWallPostcards,
   onRemovePostcard,
   onRotatePostcard,
+  onSelectPostcard,
+  selectedPostcardId,
+  className,
+  'data-testid': testId,
 }: GalleryCanvasProps) {
   const canvasRef = useRef<HTMLDivElement>(null);
   const dragState = useRef<DragState>({
@@ -38,6 +48,7 @@ export function GalleryCanvas({
     resizeHandle: null,
     initialWidth: 0,
     initialHeight: 0,
+    mode: 'move',
   });
 
   const dragStart = (e: React.MouseEvent | React.TouchEvent) => {
@@ -54,7 +65,8 @@ export function GalleryCanvas({
       dragState.current.activeItem = item;
       dragState.current.isResizing = true;
       dragState.current.resizeHandle = 'se';
-      item.style.zIndex = UI_CONFIG.Z_INDEX.DRAGGING.toString();
+      dragState.current.mode = 'resize';
+      item.style.zIndex = APP_CONFIG.ui.zIndex.dragging.toString();
       item.classList.add('dragging');
 
       // 초기 크기 저장
@@ -79,7 +91,8 @@ export function GalleryCanvas({
 
     dragState.current.activeItem = item;
     dragState.current.isResizing = false;
-    item.style.zIndex = UI_CONFIG.Z_INDEX.DRAGGING.toString();
+    dragState.current.mode = 'move';
+    item.style.zIndex = APP_CONFIG.ui.zIndex.dragging.toString();
     item.classList.add('dragging');
 
     const canvasRect = canvasRef.current.getBoundingClientRect();
@@ -102,7 +115,7 @@ export function GalleryCanvas({
   const dragEnd = useCallback(() => {
     if (dragState.current.activeItem) {
       dragState.current.activeItem.style.zIndex =
-        UI_CONFIG.Z_INDEX.DEFAULT.toString();
+        APP_CONFIG.ui.zIndex.default.toString();
       dragState.current.activeItem.classList.remove('dragging');
 
       const instanceId = parseInt(
@@ -172,9 +185,9 @@ export function GalleryCanvas({
 
       // X축 변화량을 기준으로 비율에 맞춰 크기 계산
       newWidth = Math.max(
-        POSTCARD_CONFIG.MIN_WIDTH,
+        APP_CONFIG.postcard.minSize.width,
         Math.min(
-          POSTCARD_CONFIG.MAX_WIDTH,
+          APP_CONFIG.postcard.maxSize.width,
           dragState.current.initialWidth + deltaX
         )
       );
@@ -182,8 +195,8 @@ export function GalleryCanvas({
 
       // 최소/최대 높이 제한
       newHeight = Math.max(
-        POSTCARD_CONFIG.MIN_HEIGHT,
-        Math.min(POSTCARD_CONFIG.MAX_HEIGHT, newHeight)
+        APP_CONFIG.postcard.minSize.height,
+        Math.min(APP_CONFIG.postcard.maxSize.height, newHeight)
       );
       // 높이 제한에 맞춰 너비 재계산
       newWidth = newHeight * aspectRatio;
@@ -238,17 +251,25 @@ export function GalleryCanvas({
     <div
       ref={canvasRef}
       id="wall-canvas"
-      className="wall-canvas rounded-2xl shadow-inner border border-[#e8ddd4] relative overflow-hidden"
+      className={cn(
+        'wall-canvas rounded-2xl shadow-inner border border-[#e8ddd4] relative overflow-hidden',
+        className
+      )}
       style={{
         backgroundColor:
-          wallColor === WALL_CONFIG.DEFAULT_COLOR ? undefined : wallColor,
-        minHeight: `${WALL_CONFIG.MIN_HEIGHT}px`,
+          wallColor === APP_CONFIG.wall.defaultColor ? undefined : wallColor,
+        minHeight: `${APP_CONFIG.wall.minHeight}px`,
       }}
+      data-testid={testId}
+      role="application"
+      aria-label="포스트카드 갤러리 캔버스"
+      tabIndex={0}
     >
       {wallPostcards.map(postcard => {
-        const postcardWidth = postcard.width || POSTCARD_CONFIG.DEFAULT_WIDTH;
+        const postcardWidth =
+          postcard.width || APP_CONFIG.postcard.defaultSize.width;
         const postcardHeight =
-          postcard.height || POSTCARD_CONFIG.DEFAULT_HEIGHT;
+          postcard.height || APP_CONFIG.postcard.defaultSize.height;
 
         const initialX = Math.min(
           Math.max(postcard.x, 0),
@@ -259,21 +280,36 @@ export function GalleryCanvas({
           (canvasRef.current?.offsetHeight || 500) - postcardHeight
         );
 
+        const isSelected = selectedPostcardId === postcard.instanceId;
+
         return (
           <div
             key={postcard.instanceId}
-            className="draggable-postcard absolute p-2 bg-white shadow-lg rounded-xl cursor-grab touch-none hover:shadow-xl border border-[#f0f0f0] hover-lift"
+            className={cn(
+              'draggable-postcard absolute p-2 bg-white shadow-lg rounded-xl cursor-grab touch-none hover:shadow-xl border border-[#f0f0f0] hover-lift',
+              isSelected && 'ring-2 ring-[#8b7355] shadow-xl'
+            )}
             style={{
               width: `${postcardWidth}px`,
               height: `${postcardHeight}px`,
               left: `${initialX}px`,
               top: `${initialY}px`,
               transform: `rotate(${postcard.rotation}deg)`,
-              zIndex: UI_CONFIG.Z_INDEX.DEFAULT,
+              zIndex: postcard.zIndex || APP_CONFIG.ui.zIndex.default,
             }}
             data-instance-id={postcard.instanceId}
             onMouseDown={dragStart}
             onTouchStart={dragStart}
+            onClick={() => onSelectPostcard?.(postcard.instanceId)}
+            role="img"
+            aria-label={`포스트카드: ${postcard.title}`}
+            tabIndex={0}
+            onKeyDown={e => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                onSelectPostcard?.(postcard.instanceId);
+              }
+            }}
           >
             <Image
               src={postcard.image}
@@ -284,7 +320,10 @@ export function GalleryCanvas({
               style={{ userSelect: 'none' }}
               onError={e => {
                 const target = e.target as HTMLImageElement;
-                target.src = `https://placehold.co/150x210/999999/FFFFFF?text=${postcard.title}`;
+                target.src = getFallbackImageUrl(postcard.title, {
+                  width: 150,
+                  height: 210,
+                });
               }}
             />
             {/* 닫기 버튼 */}
@@ -294,6 +333,8 @@ export function GalleryCanvas({
                 onRemovePostcard(postcard.instanceId);
               }}
               className="absolute top-1 right-1 w-6 h-6 bg-[#8b7355] text-white rounded-full flex items-center justify-center text-xs font-medium opacity-90 hover:opacity-100 hover:bg-[#2c2c2c] transition-all duration-200 shadow-md"
+              aria-label={`${postcard.title} 제거`}
+              type="button"
             >
               ×
             </button>
@@ -304,6 +345,8 @@ export function GalleryCanvas({
                 onRotatePostcard(postcard.instanceId);
               }}
               className="absolute top-1 left-1 w-6 h-6 bg-[#6b6b6b] text-white rounded-full flex items-center justify-center text-xs font-medium opacity-90 hover:opacity-100 hover:bg-[#8b7355] transition-all duration-200 shadow-md"
+              aria-label={`${postcard.title} 회전`}
+              type="button"
             >
               ↻
             </button>
@@ -314,6 +357,15 @@ export function GalleryCanvas({
               data-handle="se"
               onMouseDown={dragStart}
               onTouchStart={dragStart}
+              role="button"
+              aria-label={`${postcard.title} 크기 조절`}
+              tabIndex={0}
+              onKeyDown={e => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  // 키보드로 크기 조절하는 경우의 로직
+                }
+              }}
             />
           </div>
         );

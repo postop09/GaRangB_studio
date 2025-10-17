@@ -1,11 +1,2 @@
-export interface WallPostcard {
-  instanceId: number;
-  postcardId: number;
-  image: string;
-  title: string;
-  x: number;
-  y: number;
-  rotation: number;
-  width?: number;
-  height?: number;
-}
+// 새로운 중앙화된 타입 시스템 사용
+export type { WallPostcard, PostcardRotation } from '@/shared/types';

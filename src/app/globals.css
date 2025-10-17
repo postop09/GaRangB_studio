@@ -11,7 +11,8 @@
   --text-muted: #6b6b6b; /* 중간 회색 */
 }
 
-@theme inline {
+/* CSS 변수 정의 */
+:root {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-accent-cream: var(--accent-cream);
@@ -75,7 +76,7 @@ body {
 
 /* 부드러운 호버 효과 */
 .hover-lift {
-  /* transition을 호버 시에만 적용 */
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .hover-lift:hover {
@@ -101,9 +102,35 @@ body {
 
 /* 버튼 스타일 개선 */
 .btn-primary {
-  @apply py-3 px-6 bg-[var(--accent-cream)] text-[var(--accent-brown)] rounded-full hover:bg-[var(--accent-beige)] hover:text-[var(--foreground)] transition-all duration-300 ease-in-out font-medium text-sm border border-[var(--accent-beige)] hover:border-[var(--accent-brown)];
+  padding: 0.75rem 1.5rem;
+  background-color: var(--accent-cream);
+  color: var(--accent-brown);
+  border-radius: 9999px;
+  border: 1px solid var(--accent-beige);
+  font-weight: 500;
+  font-size: 0.875rem;
+  transition: all 0.3s ease-in-out;
+  cursor: pointer;
+}
+
+.btn-primary:hover {
+  background-color: var(--accent-beige);
+  color: var(--foreground);
+  border-color: var(--accent-brown);
 }
 
 .btn-secondary {
-  @apply py-3 px-6 bg-[var(--accent-brown)] text-white rounded-full hover:bg-[var(--accent-dark)] transition-all duration-300 ease-in-out font-medium text-sm shadow-md;
+  padding: 0.75rem 1.5rem;
+  background-color: var(--accent-brown);
+  color: white;
+  border-radius: 9999px;
+  font-weight: 500;
+  font-size: 0.875rem;
+  transition: all 0.3s ease-in-out;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+}
+
+.btn-secondary:hover {
+  background-color: var(--accent-dark);
 }

@@ -1,16 +1,12 @@
-export interface DragState {
-  activeItem: HTMLElement | null;
-  currentX: number;
-  currentY: number;
-  initialX: number;
-  initialY: number;
-  xOffset: number;
-  yOffset: number;
-  isResizing: boolean;
-  resizeHandle: string | null;
-  initialWidth: number;
-  initialHeight: number;
-}
+// 새로운 중앙화된 타입 시스템 사용
+export type {
+  DragState,
+  DragMode,
+  ResizeHandle,
+  Position,
+  Size,
+  Bounds,
+} from '@/shared/types';
 
 export interface DragAndDropActions {
   onDragStart: (e: React.MouseEvent | React.TouchEvent) => void;
