@@ -97,7 +97,7 @@ body {
 
 /* 갤러리 캔버스 스타일 */
 .wall-canvas {
-  background: var(--background);
+  background: #ffffff;
 }
 
 /* 버튼 스타일 개선 */

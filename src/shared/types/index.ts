@@ -53,6 +53,7 @@ export interface PostcardCardProps extends BaseComponentProps {
   isSelected?: boolean;
   showPrice?: boolean;
   variant?: 'default' | 'compact' | 'detailed';
+  showAddToWall?: boolean; // 갤러리 추가 버튼 표시 여부
 }
 
 export interface GalleryCanvasProps extends BaseComponentProps {

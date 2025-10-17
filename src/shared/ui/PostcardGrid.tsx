@@ -14,6 +14,7 @@ interface PostcardGridProps extends BaseComponentProps {
   variant?: 'default' | 'compact' | 'detailed';
   columns?: 1 | 2 | 3 | 4 | 5 | 6;
   loading?: boolean;
+  showAddToWall?: boolean; // 갤러리 추가 버튼 표시 여부
 }
 
 export const PostcardGrid = memo<PostcardGridProps>(
@@ -26,6 +27,7 @@ export const PostcardGrid = memo<PostcardGridProps>(
     variant = 'default',
     columns = 4,
     loading = false,
+    showAddToWall = true,
     className,
     'data-testid': testId,
   }) => {
@@ -116,6 +118,7 @@ export const PostcardGrid = memo<PostcardGridProps>(
             isSelected={selectedPostcardIds.includes(postcard.id)}
             showPrice={showPrice}
             variant={variant}
+            showAddToWall={showAddToWall}
             data-testid={`postcard-${postcard.id}`}
             className={`animate-fade-in-up ${index * 0.1}s`}
           />

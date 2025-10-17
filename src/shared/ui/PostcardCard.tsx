@@ -13,6 +13,7 @@ export const PostcardCard = memo<PostcardCardProps>(
     isSelected = false,
     showPrice = true,
     variant = 'default',
+    showAddToWall = true,
     className,
     'data-testid': testId,
   }) => {
@@ -32,18 +33,18 @@ export const PostcardCard = memo<PostcardCardProps>(
     const getVariantClasses = () => {
       switch (variant) {
         case 'compact':
-          return 'p-3';
+          return 'p-2';
         case 'detailed':
-          return 'p-8';
-        default:
           return 'p-6';
+        default:
+          return 'p-4';
       }
     };
 
     return (
       <article
         className={cn(
-          'group bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-500 overflow-hidden border border-[#f0f0f0] hover-lift',
+          'group bg-white shadow-sm hover:shadow-xl transition-all duration-500 overflow-hidden border border-[#f0f0f0] hover-lift',
           isSelected && 'ring-2 ring-[#8b7355] shadow-lg',
           getVariantClasses(),
           className
@@ -53,7 +54,7 @@ export const PostcardCard = memo<PostcardCardProps>(
         aria-label={`포스트카드: ${postcard.title}`}
       >
         {/* 이미지 영역 */}
-        <div className="relative aspect-[3/4] overflow-hidden rounded-lg">
+        <div className="relative aspect-[3/4] overflow-hidden">
           <Image
             src={postcard.image}
             alt={postcard.title}
@@ -73,7 +74,7 @@ export const PostcardCard = memo<PostcardCardProps>(
 
           {/* 액션 버튼들 */}
           <div className="absolute top-2 right-2 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-            {onAddToWall && variant === 'compact' && (
+            {onAddToWall && variant === 'compact' && showAddToWall && (
               <button
                 onClick={handleAddToWall}
                 className="w-6 h-6 bg-[#8b7355] text-white rounded-full flex items-center justify-center text-xs font-medium hover:bg-[#2c2c2c] transition-colors"
@@ -97,7 +98,7 @@ export const PostcardCard = memo<PostcardCardProps>(
         </div>
 
         {/* 콘텐츠 영역 */}
-        <div className="space-y-3">
+        <div className="space-y-3 mt-2">
           <h3 className="font-brand text-xl font-semibold text-[#2c2c2c] line-clamp-2">
             {postcard.title}
           </h3>
@@ -115,7 +116,7 @@ export const PostcardCard = memo<PostcardCardProps>(
             )}
           </div>
 
-          {onAddToWall && variant !== 'compact' && (
+          {onAddToWall && variant !== 'compact' && showAddToWall && (
             <button
               onClick={handleAddToWall}
               className="w-full btn-primary group-hover:shadow-md"

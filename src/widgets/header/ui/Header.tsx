@@ -10,7 +10,7 @@ interface HeaderProps {
 
 export function Header({ currentPage, onNavigate }: HeaderProps) {
   return (
-    <header className="bg-[#faf8f5] border-b border-[#e8ddd4] sticky top-0 z-100 backdrop-blur-sm bg-opacity-95">
+    <header className="bg-[#faf8f5] border-b border-[#e8ddd4] fixed top-0 z-100 backdrop-blur-sm bg-opacity-95 w-full">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex justify-between items-center">
         {/* 브랜드 로고 영역 */}
         <div className="flex items-center space-x-4">
