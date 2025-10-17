@@ -30,7 +30,7 @@ export default function WallPage({
   onUpdateWallPostcards,
   onRemovePostcard,
 }: WallPageProps) {
-  const [wallColor, setWallColor] = useState('#fff');
+  const [wallColor, setWallColor] = useState('#ffffff');
   const canvasRef = useRef<HTMLDivElement>(null);
   const dragState = useRef<DragState>({
     activeItem: null,
@@ -53,7 +53,7 @@ export default function WallPage({
 
   const resetWall = () => {
     onUpdateWallPostcards([]);
-    setWallColor('#faf8f5');
+    setWallColor('#ffffff');
   };
 
   const removeWallPostcard = (instanceId: number) => {
@@ -364,10 +364,10 @@ export default function WallPage({
         ref={canvasRef}
         id="wall-canvas"
         className={`wall-canvas rounded-2xl shadow-inner min-h-[600px] border border-[#e8ddd4] relative overflow-hidden ${
-          wallColor === '#fff' ? 'default-bg' : ''
+          wallColor === '#ffffff' ? 'default-bg' : ''
         }`}
         style={{
-          backgroundColor: wallColor === '#fff' ? undefined : wallColor,
+          backgroundColor: wallColor === '#ffffff' ? undefined : wallColor,
         }}
       >
         {wallPostcards.map(postcard => {
