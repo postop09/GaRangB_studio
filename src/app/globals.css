@@ -99,10 +99,6 @@ body {
   background: var(--background);
 }
 
-.wall-canvas.default-bg {
-  background: linear-gradient(135deg, var(--background) 0%, #fff 100%);
-}
-
 /* 버튼 스타일 개선 */
 .btn-primary {
   @apply py-3 px-6 bg-[var(--accent-cream)] text-[var(--accent-brown)] rounded-full hover:bg-[var(--accent-beige)] hover:text-[var(--foreground)] transition-all duration-300 ease-in-out font-medium text-sm border border-[var(--accent-beige)] hover:border-[var(--accent-brown)];

@@ -363,9 +363,7 @@ export default function WallPage({
       <div
         ref={canvasRef}
         id="wall-canvas"
-        className={`wall-canvas rounded-2xl shadow-inner min-h-[600px] border border-[#e8ddd4] relative overflow-hidden ${
-          wallColor === '#ffffff' ? 'default-bg' : ''
-        }`}
+        className="wall-canvas rounded-2xl shadow-inner min-h-[600px] border border-[#e8ddd4] relative overflow-hidden"
         style={{
           backgroundColor: wallColor === '#ffffff' ? undefined : wallColor,
         }}
