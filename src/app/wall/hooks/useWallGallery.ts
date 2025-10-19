@@ -31,29 +31,26 @@ export const useWallGallery = () => {
   }, [wallPostcards]);
 
   // 배경색 업데이트
-  const updateWallColor = useCallback((color: string) => {
+  const updateWallColor = (color: string) => {
     setWallColor(color);
-  }, []);
+  };
 
   // 포스트카드 목록 업데이트
-  const updateWallPostcards = useCallback((postcards: WallPostcard[]) => {
+  const updateWallPostcards = (postcards: WallPostcard[]) => {
     setWallPostcards(postcards);
     setSelectedPostcardId(null); // 업데이트 시 선택 해제
-  }, []);
+  };
 
   // 포스트카드 제거
-  const removeWallPostcard = useCallback(
-    (instanceId: number) => {
-      setWallPostcards(prev => prev.filter(p => p.instanceId !== instanceId));
-      if (selectedPostcardId === instanceId) {
-        setSelectedPostcardId(null);
-      }
-    },
-    [selectedPostcardId]
-  );
+  const removeWallPostcard = (instanceId: number) => {
+    setWallPostcards(prev => prev.filter(p => p.instanceId !== instanceId));
+    if (selectedPostcardId === instanceId) {
+      setSelectedPostcardId(null);
+    }
+  };
 
   // 포스트카드 선택
-  const selectPostcard = useCallback((instanceId: number | null) => {
+  const selectPostcard = (instanceId: number | null) => {
     setSelectedPostcardId(instanceId);
     setWallPostcards(prev =>
       prev.map(postcard => ({
@@ -65,7 +62,7 @@ export const useWallGallery = () => {
             : APP_CONFIG.ui.zIndex.default,
       }))
     );
-  }, []);
+  };
 
   // 갤러리에 포스트카드 추가
   const addToWall = useCallback(
@@ -99,50 +96,30 @@ export const useWallGallery = () => {
   );
 
   // 갤러리 초기화
-  const resetWall = useCallback(() => {
+  const resetWall = () => {
     setWallPostcards([]);
     setWallColor(APP_CONFIG.wall.defaultColor);
     setSelectedPostcardId(null);
-  }, []);
+  };
 
   // 포스트카드 회전
-  const rotateWallPostcard = useCallback(
-    (instanceId: number) => {
-      const updatedPostcards = wallPostcards.map(postcard => {
-        if (postcard.instanceId === instanceId) {
-          return {
-            ...postcard,
-            rotation: ((postcard.rotation + 90) % 360) as 0 | 90 | 180 | 270,
-          };
-        }
-        return postcard;
-      });
-      updateWallPostcards(updatedPostcards);
-    },
-    [wallPostcards, updateWallPostcards]
-  );
+  const rotateWallPostcard = (instanceId: number) => {
+    const updatedPostcards = wallPostcards.map(postcard => {
+      if (postcard.instanceId === instanceId) {
+        return {
+          ...postcard,
+          rotation: ((postcard.rotation + 90) % 360) as 0 | 90 | 180 | 270,
+        };
+      }
+      return postcard;
+    });
+    updateWallPostcards(updatedPostcards);
+  };
 
-  // 이벤트 핸들러들
-  const handleRemovePostcard = useCallback(
-    (instanceId: number) => {
-      removeWallPostcard(instanceId);
-    },
-    [removeWallPostcard]
-  );
-
-  const handleSelectPostcard = useCallback(
-    (instanceId: number) => {
-      selectPostcard(instanceId);
-    },
-    [selectPostcard]
-  );
-
-  const handleAddPostcardToWall = useCallback(
-    (postcard: Postcard) => {
-      addToWall(postcard);
-    },
-    [addToWall]
-  );
+  // 이벤트 핸들러들 (단순 래퍼이므로 직접 함수 사용)
+  const handleRemovePostcard = removeWallPostcard;
+  const handleSelectPostcard = selectPostcard;
+  const handleAddPostcardToWall = addToWall;
 
   return {
     // 상태
