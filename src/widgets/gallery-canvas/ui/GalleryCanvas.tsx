@@ -1,16 +1,10 @@
 'use client';
 
-import { useState, useRef, useEffect, useCallback } from 'react';
+import { useRef, useEffect, useCallback } from 'react';
 import Image from 'next/image';
-import type { WallPostcard, DragState, Size } from '@/shared/types';
+import type { WallPostcard, DragState } from '@/shared/types';
 import { APP_CONFIG } from '@/shared/config/constants';
-import {
-  clampPositionToBounds,
-  clampSizeToBounds,
-  getFallbackImageUrl,
-  getNextRotation,
-  cn,
-} from '@/shared/lib/utils';
+import { getFallbackImageUrl, cn } from '@/shared/lib/utils';
 
 interface GalleryCanvasProps {
   wallPostcards: WallPostcard[];

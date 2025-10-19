@@ -13,6 +13,7 @@ const ToolSection = ({
 }: ToolSectionProps) => {
   return (
     <section className="flex flex-col md:flex-row gap-6 mb-8 p-6 bg-white rounded-2xl shadow-sm border border-[#e8ddd4] hover-lift">
+      <h2 className="hidden">갤러리 설정</h2>
       {/* 배경색 설정 */}
       <div className="flex items-center space-x-4">
         <label

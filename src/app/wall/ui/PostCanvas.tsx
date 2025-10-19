@@ -23,6 +23,7 @@ const PostCanvas = ({
 }: PostCanvasProps) => {
   return (
     <section aria-label="포스트카드 갤러리">
+      <h2 className="hidden">나만의 벽 꾸미기</h2>
       <GalleryCanvas
         wallPostcards={wallPostcards}
         wallColor={wallColor}

@@ -13,13 +13,11 @@ export default function WallGalleryPage() {
     wallPostcards,
     selectedPostcardId,
     wallColor,
-
     // 액션
     updateWallColor,
     updateWallPostcards,
     resetWall,
     rotateWallPostcard,
-
     // 이벤트 핸들러
     handleRemovePostcard,
     handleSelectPostcard,
@@ -29,20 +27,13 @@ export default function WallGalleryPage() {
   return (
     <AppLayout>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-40">
-        {/* 페이지 헤더 */}
         <TitleSection />
-
-        {/* 설정 및 도구 영역 */}
         <ToolSection
           wallColor={wallColor}
           onUpdateWallColor={updateWallColor}
           onResetWall={resetWall}
         />
-
-        {/* 엽서 선택 섹션 */}
         <PostSelectSection onAddToWall={handleAddPostcardToWall} />
-
-        {/* 갤러리 캔버스 */}
         <PostCanvas
           wallPostcards={wallPostcards}
           wallColor={wallColor}
