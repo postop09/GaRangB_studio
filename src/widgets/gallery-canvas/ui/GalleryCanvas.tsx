@@ -280,7 +280,7 @@ export function GalleryCanvas({
           <div
             key={postcard.instanceId}
             className={cn(
-              'draggable-postcard absolute p-2 bg-white shadow-lg rounded-xl cursor-grab touch-none hover:shadow-xl border border-[#f0f0f0] hover-lift',
+              'draggable-postcard absolute p-2 bg-white shadow-lg cursor-grab touch-none hover:shadow-xl border border-[#f0f0f0] hover-lift',
               isSelected && 'ring-2 ring-[#8b7355] shadow-xl'
             )}
             style={{
@@ -309,7 +309,7 @@ export function GalleryCanvas({
               src={postcard.image}
               alt={postcard.title}
               fill
-              className="object-cover rounded-md select-none"
+              className="object-cover select-none"
               draggable={false}
               style={{ userSelect: 'none' }}
               onError={e => {

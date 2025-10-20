@@ -56,7 +56,7 @@ export function Header({ currentPage, onNavigate }: HeaderProps) {
                 : 'text-[#6b6b6b] hover:text-[#2c2c2c] hover:bg-[#f5f1eb]'
             }`}
           >
-            갤러리 꾸미기
+            벽 꾸미기
           </button>
         </nav>
       </div>
