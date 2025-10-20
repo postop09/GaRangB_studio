@@ -5,6 +5,7 @@ import { useWallGallery } from './hooks';
 import TitleSection from './ui/TitleSection';
 import ToolSection from './ui/ToolSection';
 import PostSelectSection from './ui/PostSelectSection';
+import ImageUploadSection from './ui/ImageUploadSection';
 import PostCanvas from './ui/PostCanvas';
 
 export default function WallGalleryPage() {
@@ -13,11 +14,13 @@ export default function WallGalleryPage() {
     wallPostcards,
     selectedPostcardId,
     wallColor,
+    isUploading,
     // 액션
     updateWallColor,
     updateWallPostcards,
     resetWall,
     rotateWallPostcard,
+    handleImageUpload,
     // 이벤트 핸들러
     handleRemovePostcard,
     handleSelectPostcard,
@@ -34,6 +37,10 @@ export default function WallGalleryPage() {
           onResetWall={resetWall}
         />
         <PostSelectSection onAddToWall={handleAddPostcardToWall} />
+        <ImageUploadSection
+          onImageUpload={handleImageUpload}
+          isUploading={isUploading}
+        />
         <PostCanvas
           wallPostcards={wallPostcards}
           wallColor={wallColor}
