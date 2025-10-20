@@ -1,10 +1,9 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback } from 'react';
 import { Postcard, WallPostcard } from '@/shared/types';
 import { APP_CONFIG } from '@/shared/config/constants';
 import {
   createWallPostcard,
   findNonOverlappingPosition,
-  storage,
 } from '@/shared/lib/utils';
 
 export const useWallGallery = () => {
@@ -16,19 +15,6 @@ export const useWallGallery = () => {
   const [wallColor, setWallColor] = useState<string>(
     APP_CONFIG.wall.defaultColor
   );
-
-  // 로컬 스토리지에서 상태 복원
-  useEffect(() => {
-    const savedPostcards = storage.get<WallPostcard[]>('wallPostcards', []);
-    setWallPostcards(savedPostcards);
-  }, []);
-
-  // 상태 변경 시 로컬 스토리지에 저장
-  useEffect(() => {
-    if (wallPostcards.length > 0) {
-      storage.set('wallPostcards', wallPostcards);
-    }
-  }, [wallPostcards]);
 
   // 배경색 업데이트
   const updateWallColor = (color: string) => {
