@@ -13,7 +13,6 @@ interface GalleryCanvasProps {
   onRemovePostcard: (instanceId: number) => void;
   onRotatePostcard: (instanceId: number) => void;
   onSelectPostcard?: (instanceId: number) => void;
-  selectedPostcardId?: number;
   className?: string;
   'data-testid'?: string;
 }
@@ -25,7 +24,6 @@ export function GalleryCanvas({
   onRemovePostcard,
   onRotatePostcard,
   onSelectPostcard,
-  selectedPostcardId,
   className,
   'data-testid': testId,
 }: GalleryCanvasProps) {
@@ -274,15 +272,10 @@ export function GalleryCanvas({
           (canvasRef.current?.offsetHeight || 500) - postcardHeight
         );
 
-        const isSelected = selectedPostcardId === postcard.instanceId;
-
         return (
           <div
             key={postcard.instanceId}
-            className={cn(
-              'draggable-postcard absolute p-2 bg-white shadow-lg cursor-grab touch-none hover:shadow-xl border border-[#f0f0f0] hover-lift',
-              isSelected && 'ring-2 ring-[#8b7355] shadow-xl'
-            )}
+            className="draggable-postcard absolute p-2 bg-white shadow-lg cursor-grab touch-none hover:shadow-xl border border-[#f0f0f0] hover-lift"
             style={{
               width: `${postcardWidth}px`,
               height: `${postcardHeight}px`,

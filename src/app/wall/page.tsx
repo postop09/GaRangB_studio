@@ -12,7 +12,6 @@ export default function WallGalleryPage() {
   const {
     // 상태
     wallPostcards,
-    selectedPostcardId,
     wallColor,
     isUploading,
     // 액션
@@ -44,7 +43,6 @@ export default function WallGalleryPage() {
         <PostCanvas
           wallPostcards={wallPostcards}
           wallColor={wallColor}
-          selectedPostcardId={selectedPostcardId}
           onUpdateWallPostcards={updateWallPostcards}
           onRemovePostcard={handleRemovePostcard}
           onRotatePostcard={rotateWallPostcard}

@@ -9,9 +9,6 @@ import {
 export const useWallGallery = () => {
   // 로컬 상태 관리
   const [wallPostcards, setWallPostcards] = useState<WallPostcard[]>([]);
-  const [selectedPostcardId, setSelectedPostcardId] = useState<number | null>(
-    null
-  );
   const [wallColor, setWallColor] = useState<string>(
     APP_CONFIG.wall.defaultColor
   );
@@ -25,20 +22,15 @@ export const useWallGallery = () => {
   // 포스트카드 목록 업데이트
   const updateWallPostcards = (postcards: WallPostcard[]) => {
     setWallPostcards(postcards);
-    setSelectedPostcardId(null); // 업데이트 시 선택 해제
   };
 
   // 포스트카드 제거
   const removeWallPostcard = (instanceId: number) => {
     setWallPostcards(prev => prev.filter(p => p.instanceId !== instanceId));
-    if (selectedPostcardId === instanceId) {
-      setSelectedPostcardId(null);
-    }
   };
 
   // 포스트카드 선택
   const selectPostcard = (instanceId: number | null) => {
-    setSelectedPostcardId(instanceId);
     setWallPostcards(prev =>
       prev.map(postcard => ({
         ...postcard,
@@ -120,9 +112,9 @@ export const useWallGallery = () => {
                 canvas.width = img.height;
                 canvas.height = img.width;
 
-                // 90도 회전하여 그리기
+                // 90도 회전하여 그리기 (반시계방향)
                 ctx.translate(canvas.width / 2, canvas.height / 2);
-                ctx.rotate(Math.PI / 2);
+                ctx.rotate(-Math.PI / 2);
                 ctx.drawImage(img, -img.width / 2, -img.height / 2);
               } else {
                 // 세로 이미지인 경우 그대로 그리기
@@ -170,7 +162,6 @@ export const useWallGallery = () => {
   const resetWall = () => {
     setWallPostcards([]);
     setWallColor(APP_CONFIG.wall.defaultColor);
-    setSelectedPostcardId(null);
   };
 
   // 포스트카드 회전
@@ -195,7 +186,6 @@ export const useWallGallery = () => {
   return {
     // 상태
     wallPostcards,
-    selectedPostcardId,
     wallColor,
     isUploading,
 
