@@ -5,7 +5,6 @@ import React from 'react';
 interface PostCanvasProps {
   wallPostcards: WallPostcard[];
   wallColor: string;
-  selectedPostcardId: number | null;
   onUpdateWallPostcards: (postcards: WallPostcard[]) => void;
   onRemovePostcard: (instanceId: number) => void;
   onRotatePostcard: (instanceId: number) => void;
@@ -15,7 +14,6 @@ interface PostCanvasProps {
 const PostCanvas = ({
   wallPostcards,
   wallColor,
-  selectedPostcardId,
   onUpdateWallPostcards,
   onRemovePostcard,
   onRotatePostcard,
@@ -31,7 +29,6 @@ const PostCanvas = ({
         onRemovePostcard={onRemovePostcard}
         onRotatePostcard={onRotatePostcard}
         onSelectPostcard={onSelectPostcard}
-        selectedPostcardId={selectedPostcardId ?? undefined}
         data-testid="gallery-canvas"
       />
     </section>

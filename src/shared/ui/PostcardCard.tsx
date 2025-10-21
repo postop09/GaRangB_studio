@@ -46,12 +46,21 @@ export const PostcardCard = memo<PostcardCardProps>(
         className={cn(
           'group bg-white shadow-sm hover:shadow-xl transition-all duration-500 overflow-hidden border border-[#f0f0f0] hover-lift',
           isSelected && 'ring-2 ring-[#8b7355] shadow-lg',
+          onAddToWall &&
+            variant === 'compact' &&
+            showAddToWall &&
+            'cursor-pointer',
           getVariantClasses(),
           className
         )}
         data-testid={testId}
         role="article"
         aria-label={`포스트카드: ${postcard.title}`}
+        onClick={
+          onAddToWall && variant === 'compact' && showAddToWall
+            ? handleAddToWall
+            : undefined
+        }
       >
         {/* 이미지 영역 */}
         <div className="relative aspect-[3/4] overflow-hidden">
@@ -74,16 +83,6 @@ export const PostcardCard = memo<PostcardCardProps>(
 
           {/* 액션 버튼들 */}
           <div className="absolute top-2 right-2 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-            {onAddToWall && variant === 'compact' && showAddToWall && (
-              <button
-                onClick={handleAddToWall}
-                className="w-6 h-6 bg-[#8b7355] text-white rounded-full flex items-center justify-center text-xs font-medium hover:bg-[#2c2c2c] transition-colors"
-                aria-label={`${postcard.title}을 갤러리에 추가`}
-                type="button"
-              >
-                +
-              </button>
-            )}
             {onRemove && (
               <button
                 onClick={handleRemove}
@@ -95,6 +94,15 @@ export const PostcardCard = memo<PostcardCardProps>(
               </button>
             )}
           </div>
+
+          {/* 클릭 시 추가 표시 */}
+          {onAddToWall && variant === 'compact' && showAddToWall && (
+            <div className="absolute inset-0 bg-[#8b7355]/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+              <div className="bg-[#8b7355] text-white px-4 py-2 rounded-full text-sm font-medium shadow-lg">
+                갤러리에 추가
+              </div>
+            </div>
+          )}
         </div>
 
         {/* 콘텐츠 영역 */}

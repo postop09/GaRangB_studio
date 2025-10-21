@@ -1,34 +1,18 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback } from 'react';
 import { Postcard, WallPostcard } from '@/shared/types';
 import { APP_CONFIG } from '@/shared/config/constants';
 import {
   createWallPostcard,
   findNonOverlappingPosition,
-  storage,
 } from '@/shared/lib/utils';
 
 export const useWallGallery = () => {
   // 로컬 상태 관리
   const [wallPostcards, setWallPostcards] = useState<WallPostcard[]>([]);
-  const [selectedPostcardId, setSelectedPostcardId] = useState<number | null>(
-    null
-  );
   const [wallColor, setWallColor] = useState<string>(
     APP_CONFIG.wall.defaultColor
   );
-
-  // 로컬 스토리지에서 상태 복원
-  useEffect(() => {
-    const savedPostcards = storage.get<WallPostcard[]>('wallPostcards', []);
-    setWallPostcards(savedPostcards);
-  }, []);
-
-  // 상태 변경 시 로컬 스토리지에 저장
-  useEffect(() => {
-    if (wallPostcards.length > 0) {
-      storage.set('wallPostcards', wallPostcards);
-    }
-  }, [wallPostcards]);
+  const [isUploading, setIsUploading] = useState(false);
 
   // 배경색 업데이트
   const updateWallColor = (color: string) => {
@@ -38,20 +22,15 @@ export const useWallGallery = () => {
   // 포스트카드 목록 업데이트
   const updateWallPostcards = (postcards: WallPostcard[]) => {
     setWallPostcards(postcards);
-    setSelectedPostcardId(null); // 업데이트 시 선택 해제
   };
 
   // 포스트카드 제거
   const removeWallPostcard = (instanceId: number) => {
     setWallPostcards(prev => prev.filter(p => p.instanceId !== instanceId));
-    if (selectedPostcardId === instanceId) {
-      setSelectedPostcardId(null);
-    }
   };
 
   // 포스트카드 선택
   const selectPostcard = (instanceId: number | null) => {
-    setSelectedPostcardId(instanceId);
     setWallPostcards(prev =>
       prev.map(postcard => ({
         ...postcard,
@@ -95,11 +74,89 @@ export const useWallGallery = () => {
     [wallPostcards]
   );
 
+  // 이미지 파일 업로드
+  const handleImageUpload = useCallback(
+    async (file: File) => {
+      try {
+        setIsUploading(true);
+
+        // 파일 유효성 검사
+        if (!file.type.startsWith('image/')) {
+          alert('이미지 파일만 업로드할 수 있습니다.');
+          return;
+        }
+
+        // 이미지 크기 확인 및 회전 처리
+        const processedImageUrl = await new Promise<string>(
+          (resolve, reject) => {
+            const img = new Image();
+            img.onload = () => {
+              const canvas = document.createElement('canvas');
+              const ctx = canvas.getContext('2d');
+
+              if (!ctx) {
+                reject(new Error('Canvas context를 가져올 수 없습니다.'));
+                return;
+              }
+
+              // 가로 이미지인지 확인 (가로가 세로보다 긴 경우)
+              const isLandscape = img.width > img.height;
+
+              if (isLandscape) {
+                // 가로 이미지인 경우 90도 회전하여 세로로 만들기
+                canvas.width = img.height;
+                canvas.height = img.width;
+
+                // 90도 회전하여 그리기 (반시계방향)
+                ctx.translate(canvas.width / 2, canvas.height / 2);
+                ctx.rotate(-Math.PI / 2);
+                ctx.drawImage(img, -img.width / 2, -img.height / 2);
+              } else {
+                // 세로 이미지인 경우 그대로 그리기
+                canvas.width = img.width;
+                canvas.height = img.height;
+                ctx.drawImage(img, 0, 0);
+              }
+
+              // 처리된 이미지를 base64로 변환
+              const dataUrl = canvas.toDataURL('image/jpeg', 0.9);
+              resolve(dataUrl);
+            };
+
+            img.onerror = () =>
+              reject(new Error('이미지 로드에 실패했습니다.'));
+            img.src = URL.createObjectURL(file);
+          }
+        );
+
+        // 업로드된 이미지를 Postcard 형태로 변환하여 갤러리에 추가
+        const uploadedPostcard: Postcard = {
+          id: Date.now(), // 고유 ID 생성
+          title: file.name.replace(/\.[^/.]+$/, ''), // 확장자 제거
+          image: processedImageUrl,
+          theme: '기타',
+          price: 0,
+          description: '업로드된 이미지',
+        };
+
+        // 갤러리에 추가
+        addToWall(uploadedPostcard);
+
+        console.log('이미지 업로드 완료:', file.name);
+      } catch (error) {
+        console.error('이미지 업로드 실패:', error);
+        alert('이미지 업로드에 실패했습니다. 다시 시도해주세요.');
+      } finally {
+        setIsUploading(false);
+      }
+    },
+    [addToWall]
+  );
+
   // 갤러리 초기화
   const resetWall = () => {
     setWallPostcards([]);
     setWallColor(APP_CONFIG.wall.defaultColor);
-    setSelectedPostcardId(null);
   };
 
   // 포스트카드 회전
@@ -124,8 +181,8 @@ export const useWallGallery = () => {
   return {
     // 상태
     wallPostcards,
-    selectedPostcardId,
     wallColor,
+    isUploading,
 
     // 액션
     updateWallColor,
@@ -135,6 +192,7 @@ export const useWallGallery = () => {
     addToWall,
     resetWall,
     rotateWallPostcard,
+    handleImageUpload,
 
     // 이벤트 핸들러
     handleRemovePostcard,
