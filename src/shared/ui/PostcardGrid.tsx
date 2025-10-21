@@ -9,6 +9,7 @@ interface PostcardGridProps extends BaseComponentProps {
   postcards: Postcard[];
   onAddToWall?: (postcard: Postcard) => void;
   onRemove?: (id: number) => void;
+  onPostcardToggle?: (postcard: Postcard) => void;
   selectedPostcardIds?: number[];
   showPrice?: boolean;
   variant?: 'default' | 'compact' | 'detailed';
@@ -22,6 +23,7 @@ export const PostcardGrid = memo<PostcardGridProps>(
     postcards,
     onAddToWall,
     onRemove,
+    onPostcardToggle,
     selectedPostcardIds = [],
     showPrice = true,
     variant = 'default',
@@ -115,6 +117,7 @@ export const PostcardGrid = memo<PostcardGridProps>(
             postcard={postcard}
             onAddToWall={onAddToWall}
             onRemove={onRemove}
+            onToggle={onPostcardToggle}
             isSelected={selectedPostcardIds.includes(postcard.id)}
             showPrice={showPrice}
             variant={variant}

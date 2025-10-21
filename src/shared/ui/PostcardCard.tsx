@@ -10,6 +10,7 @@ export const PostcardCard = memo<PostcardCardProps>(
     postcard,
     onAddToWall,
     onRemove,
+    onToggle,
     isSelected = false,
     showPrice = true,
     variant = 'default',
@@ -28,6 +29,10 @@ export const PostcardCard = memo<PostcardCardProps>(
 
     const handleRemove = () => {
       onRemove?.(postcard.id);
+    };
+
+    const handleToggle = () => {
+      onToggle?.(postcard);
     };
 
     const getVariantClasses = () => {
@@ -57,7 +62,9 @@ export const PostcardCard = memo<PostcardCardProps>(
         role="article"
         aria-label={`포스트카드: ${postcard.title}`}
         onClick={
-          onAddToWall && variant === 'compact' && showAddToWall
+          onToggle
+            ? handleToggle
+            : onAddToWall && variant === 'compact' && showAddToWall
             ? handleAddToWall
             : undefined
         }
@@ -80,6 +87,13 @@ export const PostcardCard = memo<PostcardCardProps>(
               <p className="text-sm opacity-90">#{postcard.theme}</p>
             </div>
           </div>
+
+          {/* 선택 표시 */}
+          {isSelected && (
+            <div className="absolute top-2 left-2 w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-xs font-bold">
+              ✓
+            </div>
+          )}
 
           {/* 액션 버튼들 */}
           <div className="absolute top-2 right-2 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
