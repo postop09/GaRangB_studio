@@ -86,11 +86,6 @@ export const useWallGallery = () => {
           return;
         }
 
-        if (file.size > 5 * 1024 * 1024) {
-          alert('파일 크기는 5MB 이하여야 합니다.');
-          return;
-        }
-
         // 이미지 크기 확인 및 회전 처리
         const processedImageUrl = await new Promise<string>(
           (resolve, reject) => {

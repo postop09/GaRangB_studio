@@ -198,21 +198,8 @@ export function GalleryCanvas({
     } else {
       // 일반 드래그 로직
       // 새로운 아이템 위치 계산 (offset을 빼서 클릭한 지점이 그대로 유지되도록)
-      let newX = canvasX - dragState.current.xOffset;
-      let newY = canvasY - dragState.current.yOffset;
-
-      // 캔버스 경계 내로 제한
-      const itemWidth = dragState.current.activeItem.offsetWidth;
-      const itemHeight = dragState.current.activeItem.offsetHeight;
-
-      newX = Math.max(
-        0,
-        Math.min(newX, canvasRef.current.offsetWidth - itemWidth)
-      );
-      newY = Math.max(
-        0,
-        Math.min(newY, canvasRef.current.offsetHeight - itemHeight)
-      );
+      const newX = canvasX - dragState.current.xOffset;
+      const newY = canvasY - dragState.current.yOffset;
 
       dragState.current.activeItem.style.left = `${newX}px`;
       dragState.current.activeItem.style.top = `${newY}px`;
@@ -347,12 +334,6 @@ export function GalleryCanvas({
               role="button"
               aria-label={`${postcard.title} 크기 조절`}
               tabIndex={0}
-              onKeyDown={e => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                  e.preventDefault();
-                  // 키보드로 크기 조절하는 경우의 로직
-                }
-              }}
             />
           </div>
         );
