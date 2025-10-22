@@ -1,14 +1,37 @@
 'use client';
 
-import { PageType } from '@/shared/types';
+import { useSelectedPostcards } from '@/shared';
+import { useRouter, usePathname } from 'next/navigation';
 import Image from 'next/image';
 
-interface HeaderProps {
-  currentPage: PageType;
-  onNavigate: (page: PageType) => void;
-}
+export function Header() {
+  const router = useRouter();
+  const pathname = usePathname();
+  const { selectedCount } = useSelectedPostcards();
 
-export function Header({ currentPage, onNavigate }: HeaderProps) {
+  const getCurrentPage = () => {
+    if (pathname === '/wall') return 'wall';
+    if (pathname === '/order') return 'order';
+    return 'main';
+  };
+
+  const currentPage = getCurrentPage();
+
+  const handleHomeClick = () => {
+    router.push('/');
+    window.scrollTo({ top: 0 });
+  };
+
+  const handleWallClick = () => {
+    router.push('/wall');
+    window.scrollTo({ top: 0 });
+  };
+
+  const handleOrderClick = () => {
+    router.push('/order');
+    window.scrollTo({ top: 0 });
+  };
+
   return (
     <header className="bg-[#faf8f5] border-b border-[#e8ddd4] fixed top-0 z-100 backdrop-blur-sm bg-opacity-95 w-full">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex justify-between items-center">
@@ -37,19 +60,19 @@ export function Header({ currentPage, onNavigate }: HeaderProps) {
         </div>
 
         {/* 네비게이션 */}
-        <nav className="flex space-x-2">
+        <nav className="flex items-center space-x-2">
           <button
-            onClick={() => onNavigate('main')}
+            onClick={handleHomeClick}
             className={`font-medium transition-all duration-300 ease-in-out px-6 py-3 rounded-full text-sm ${
               currentPage === 'main'
                 ? 'text-[#2c2c2c] bg-[#e8ddd4] shadow-sm'
                 : 'text-[#6b6b6b] hover:text-[#2c2c2c] hover:bg-[#f5f1eb]'
             }`}
           >
-            포트폴리오
+            홈
           </button>
           <button
-            onClick={() => onNavigate('wall')}
+            onClick={handleWallClick}
             className={`font-medium transition-all duration-300 ease-in-out px-6 py-3 rounded-full text-sm ${
               currentPage === 'wall'
                 ? 'text-[#2c2c2c] bg-[#e8ddd4] shadow-sm'
@@ -57,6 +80,18 @@ export function Header({ currentPage, onNavigate }: HeaderProps) {
             }`}
           >
             벽 꾸미기
+          </button>
+
+          {/* 주문하기 버튼 */}
+          <button
+            onClick={handleOrderClick}
+            className={`relative font-medium transition-all duration-300 ease-in-out px-6 py-3 rounded-full text-sm ${
+              currentPage === 'order'
+                ? 'bg-blue-600 text-white shadow-lg'
+                : 'bg-blue-500 text-white hover:bg-blue-600 shadow-md hover:shadow-lg'
+            }`}
+          >
+            주문하기
           </button>
         </nav>
       </div>
