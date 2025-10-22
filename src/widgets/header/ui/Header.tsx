@@ -1,13 +1,11 @@
 'use client';
 
-import { useSelectedPostcards } from '@/shared';
 import { useRouter, usePathname } from 'next/navigation';
 import Image from 'next/image';
 
 export function Header() {
   const router = useRouter();
   const pathname = usePathname();
-  const { selectedCount } = useSelectedPostcards();
 
   const getCurrentPage = () => {
     if (pathname === '/wall') return 'wall';
