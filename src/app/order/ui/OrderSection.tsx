@@ -11,7 +11,9 @@ function OrderSection() {
     selectedPostcards,
     deselectPostcard,
     clearAllSelected,
+    updateQuantity,
     totalPrice,
+    totalQuantity,
     isLoading,
   } = useSelectedPostcards();
 
@@ -25,6 +27,11 @@ function OrderSection() {
 
   const handleClearAll = () => {
     clearAllSelected();
+  };
+
+  const handleQuantityChange = (postcardId: number, newQuantity: number) => {
+    if (newQuantity < 1) return;
+    updateQuantity(postcardId, newQuantity);
   };
 
   if (isLoading) {
@@ -144,9 +151,17 @@ function OrderSection() {
                           {postcard.description}
                         </p>
                         <div className="flex items-center justify-between mt-3">
-                          <span className="text-lg font-bold text-blue-600">
-                            {formatPrice(postcard.price)}
-                          </span>
+                          <div className="flex items-center space-x-4">
+                            <span className="text-lg font-bold text-blue-600">
+                              {formatPrice(postcard.price)}
+                            </span>
+                            <span className="text-sm text-gray-500">
+                              × {postcard.quantity}개
+                            </span>
+                            <span className="text-lg font-bold text-green-600">
+                              {formatPrice(postcard.price * postcard.quantity)}
+                            </span>
+                          </div>
                           <span className="text-xs text-gray-500">
                             {postcard.selectedAt.toLocaleDateString('ko-KR')}{' '}
                             선택
@@ -154,26 +169,59 @@ function OrderSection() {
                         </div>
                       </div>
 
-                      {/* 삭제 버튼 */}
-                      <button
-                        onClick={() => handleRemovePostcard(postcard.id)}
-                        className="w-8 h-8 bg-red-100 text-red-600 rounded-full flex items-center justify-center hover:bg-red-200 transition-colors"
-                        aria-label={`${postcard.title} 제거`}
-                      >
-                        <svg
-                          className="w-4 h-4"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
+                      {/* 수량 조절 및 삭제 버튼 */}
+                      <div className="flex items-center space-x-3">
+                        {/* 수량 조절 */}
+                        <div className="flex items-center border border-gray-300 rounded-lg">
+                          <button
+                            onClick={() =>
+                              handleQuantityChange(
+                                postcard.id,
+                                postcard.quantity - 1
+                              )
+                            }
+                            disabled={postcard.quantity <= 1}
+                            className="px-3 py-1 text-gray-600 hover:text-gray-800 disabled:text-gray-300 disabled:cursor-not-allowed"
+                          >
+                            −
+                          </button>
+                          <span className="px-3 py-1 text-sm font-medium min-w-[3rem] text-center">
+                            {postcard.quantity}
+                          </span>
+                          <button
+                            onClick={() =>
+                              handleQuantityChange(
+                                postcard.id,
+                                postcard.quantity + 1
+                              )
+                            }
+                            className="px-3 py-1 text-gray-600 hover:text-gray-800"
+                          >
+                            +
+                          </button>
+                        </div>
+
+                        {/* 삭제 버튼 */}
+                        <button
+                          onClick={() => handleRemovePostcard(postcard.id)}
+                          className="w-8 h-8 bg-red-100 text-red-600 rounded-full flex items-center justify-center hover:bg-red-200 transition-colors"
+                          aria-label={`${postcard.title} 제거`}
                         >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M6 18L18 6M6 6l12 12"
-                          />
-                        </svg>
-                      </button>
+                          <svg
+                            className="w-4 h-4"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M6 18L18 6M6 6l12 12"
+                            />
+                          </svg>
+                        </button>
+                      </div>
                     </div>
                   </div>
                 ))}
@@ -190,10 +238,14 @@ function OrderSection() {
 
               <div className="space-y-4 mb-6">
                 <div className="flex justify-between text-sm">
-                  <span className="text-gray-600">엽서 개수</span>
+                  <span className="text-gray-600">엽서 종류</span>
                   <span className="font-medium">
-                    {selectedPostcards.length}개
+                    {selectedPostcards.length}종류
                   </span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-600">총 수량</span>
+                  <span className="font-medium">{totalQuantity}개</span>
                 </div>
                 <div className="border-t border-gray-200 pt-4">
                   <div className="flex justify-between text-lg font-bold">

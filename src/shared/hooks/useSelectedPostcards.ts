@@ -7,6 +7,7 @@ const STORAGE_KEY = 'selectedPostcards';
 
 export interface SelectedPostcard extends Postcard {
   selectedAt: Date;
+  quantity: number;
 }
 
 export function useSelectedPostcards() {
@@ -67,6 +68,7 @@ export function useSelectedPostcards() {
           {
             ...postcard,
             selectedAt: new Date(),
+            quantity: 1,
           },
         ];
         saveToStorage(newSelected);
@@ -105,9 +107,31 @@ export function useSelectedPostcards() {
   // 선택된 엽서 개수
   const selectedCount = selectedPostcards.length;
 
-  // 총 가격 계산
+  // 수량 업데이트
+  const updateQuantity = useCallback(
+    (postcardId: number, quantity: number) => {
+      if (quantity < 1) return;
+
+      setSelectedPostcards(prev => {
+        const newSelected = prev.map(p =>
+          p.id === postcardId ? { ...p, quantity } : p
+        );
+        saveToStorage(newSelected);
+        return newSelected;
+      });
+    },
+    [saveToStorage]
+  );
+
+  // 총 가격 계산 (수량 고려)
   const totalPrice = selectedPostcards.reduce(
-    (sum, postcard) => sum + postcard.price,
+    (sum, postcard) => sum + postcard.price * postcard.quantity,
+    0
+  );
+
+  // 총 수량
+  const totalQuantity = selectedPostcards.reduce(
+    (sum, postcard) => sum + postcard.quantity,
     0
   );
 
@@ -119,6 +143,8 @@ export function useSelectedPostcards() {
     clearAllSelected,
     isSelected,
     selectedCount,
+    updateQuantity,
     totalPrice,
+    totalQuantity,
   };
 }
