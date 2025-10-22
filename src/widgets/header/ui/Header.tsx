@@ -79,8 +79,6 @@ export function Header() {
           >
             벽 꾸미기
           </button>
-
-          {/* 주문하기 버튼 */}
           <button
             onClick={handleOrderClick}
             className={`relative font-medium transition-all duration-300 ease-in-out px-6 py-3 rounded-full text-sm ${
@@ -89,7 +87,7 @@ export function Header() {
                 : 'bg-blue-500 text-white hover:bg-blue-600 shadow-md hover:shadow-lg'
             }`}
           >
-            주문하기
+            주문 문의
           </button>
         </nav>
       </div>

@@ -1,12 +1,15 @@
 'use client';
 
+import { useState } from 'react';
 import { useSelectedPostcards } from '@/shared';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { formatPrice } from '@/shared/lib/utils';
+import { OrderTemplateModal } from './OrderTemplateModal';
 
 function OrderSection() {
   const router = useRouter();
+  const [isTemplateModalOpen, setIsTemplateModalOpen] = useState(false);
   const {
     selectedPostcards,
     deselectPostcard,
@@ -32,6 +35,10 @@ function OrderSection() {
   const handleQuantityChange = (postcardId: number, newQuantity: number) => {
     if (newQuantity < 1) return;
     updateQuantity(postcardId, newQuantity);
+  };
+
+  const handleOrderClick = () => {
+    setIsTemplateModalOpen(true);
   };
 
   if (isLoading) {
@@ -259,21 +266,27 @@ function OrderSection() {
 
               <button
                 className="w-full bg-blue-500 text-white py-3 px-4 rounded-xl font-medium hover:bg-blue-600 transition-colors duration-200 shadow-md hover:shadow-lg"
-                onClick={() => {
-                  // 실제 주문 처리 로직
-                  alert('주문이 완료되었습니다!');
-                }}
+                onClick={handleOrderClick}
               >
-                주문하기
+                주문 문의하기
               </button>
 
               <p className="text-xs text-gray-500 text-center mt-4">
-                주문 후 3-5일 내에 배송됩니다
+                위 버튼을 눌러 인스타 DM으로 문의해주세요.
               </p>
             </div>
           </div>
         </div>
       </div>
+
+      {/* 주문 문의 템플릿 모달 */}
+      <OrderTemplateModal
+        isOpen={isTemplateModalOpen}
+        onClose={() => setIsTemplateModalOpen(false)}
+        selectedPostcards={selectedPostcards}
+        totalPrice={totalPrice}
+        totalQuantity={totalQuantity}
+      />
     </div>
   );
 }
