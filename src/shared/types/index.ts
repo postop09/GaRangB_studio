@@ -8,6 +8,8 @@ export interface Postcard {
   description: string;
   createdAt?: Date;
   updatedAt?: Date;
+  selectedAt?: Date;
+  quantity?: number;
 }
 
 export interface WallPostcard {

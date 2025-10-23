@@ -23,7 +23,7 @@ export function useSelectedPostcards() {
       if (stored) {
         const parsed = JSON.parse(stored);
         // Date 객체 복원
-        const postcards = parsed.map((item: any) => ({
+        const postcards = parsed.map((item: SelectedPostcard) => ({
           ...item,
           selectedAt: new Date(item.selectedAt),
           createdAt: item.createdAt ? new Date(item.createdAt) : undefined,
