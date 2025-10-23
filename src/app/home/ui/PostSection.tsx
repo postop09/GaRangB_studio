@@ -1,7 +1,31 @@
+'use client';
+
 import { PostcardGrid } from '@/shared/ui';
-import { postcardsData } from '@/shared';
+import { postcardsData, useSelectedPostcards } from '@/shared';
+import { useRouter } from 'next/navigation';
 
 function PostSection() {
+  const router = useRouter();
+  const {
+    selectedPostcards,
+    selectPostcard,
+    deselectPostcard,
+    isSelected,
+    selectedCount,
+  } = useSelectedPostcards();
+
+  const handlePostcardToggle = (postcard: any) => {
+    if (isSelected(postcard.id)) {
+      deselectPostcard(postcard.id);
+    } else {
+      selectPostcard(postcard);
+    }
+  };
+
+  const handleOrderClick = () => {
+    router.push('/order');
+  };
+
   return (
     <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
       {/* 섹션 헤더 */}
@@ -14,6 +38,31 @@ function PostSection() {
         </p>
       </header>
 
+      {/* 선택된 엽서 정보 및 주문 버튼 */}
+      {selectedCount > 0 && (
+        <div className="mb-8 p-6 bg-blue-50 rounded-2xl border border-blue-200 animate-fade-in-up">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-4">
+              <div className="flex items-center space-x-2">
+                <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
+                  <span className="text-white text-sm font-semibold">
+                    {selectedCount}
+                  </span>
+                </div>
+                <span className="text-blue-700 font-medium">
+                  {selectedCount}개의 엽서가 선택되었습니다
+                </span>
+              </div>
+            </div>
+            <button
+              onClick={handleOrderClick}
+              className="px-6 py-3 bg-blue-500 text-white rounded-xl font-medium hover:bg-blue-600 transition-colors duration-200 shadow-md hover:shadow-lg"
+            >
+              주문 문의
+            </button>
+          </div>
+        </div>
+      )}
       {/* 포트폴리오 그리드 */}
       <PostcardGrid
         postcards={postcardsData}
@@ -21,6 +70,8 @@ function PostSection() {
         showPrice={true}
         variant="default"
         showAddToWall={false}
+        selectedPostcardIds={selectedPostcards.map(p => p.id)}
+        onPostcardToggle={handlePostcardToggle}
         data-testid="postcard-grid"
       />
     </section>

@@ -8,6 +8,8 @@ export interface Postcard {
   description: string;
   createdAt?: Date;
   updatedAt?: Date;
+  selectedAt?: Date;
+  quantity?: number;
 }
 
 export interface WallPostcard {
@@ -50,6 +52,7 @@ export interface PostcardCardProps extends BaseComponentProps {
   postcard: Postcard;
   onAddToWall?: (postcard: Postcard) => void;
   onRemove?: (id: number) => void;
+  onToggle?: (postcard: Postcard) => void;
   isSelected?: boolean;
   showPrice?: boolean;
   variant?: 'default' | 'compact' | 'detailed';
