@@ -83,17 +83,17 @@ export function OrderTemplateModal({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden">
+    <div className="fixed inset-0 bg-black bg-opacity-50 z-[9999] flex items-end justify-center">
+      <div className="bg-white rounded-t-2xl shadow-2xl w-full max-w-4xl max-h-[85vh] overflow-hidden flex flex-col transform transition-transform duration-300 ease-out">
         {/* 헤더 */}
-        <div className="p-6 border-b border-gray-200">
+        <div className="p-4 sm:p-6 border-b border-gray-200">
           <div className="flex items-center justify-between">
-            <h2 className="text-2xl font-bold text-gray-900">
+            <h2 className="text-xl sm:text-2xl font-bold text-gray-900">
               📮 주문 문의 템플릿
             </h2>
             <button
               onClick={onClose}
-              className="text-gray-400 hover:text-gray-600 transition-colors"
+              className="text-gray-400 hover:text-gray-600 transition-colors p-2"
             >
               <svg
                 className="w-6 h-6"
@@ -110,26 +110,26 @@ export function OrderTemplateModal({
               </svg>
             </button>
           </div>
-          <p className="text-gray-600 mt-2">
+          <p className="text-sm sm:text-base text-gray-600 mt-2">
             아래 템플릿을 복사하여 인스타그램 DM으로 주문 문의를 보내주세요
           </p>
         </div>
 
         {/* 템플릿 내용 */}
-        <div className="p-6 overflow-y-auto max-h-96">
-          <div className="bg-gray-50 rounded-xl p-4 border">
-            <pre className="whitespace-pre-wrap text-sm text-gray-800 font-mono leading-relaxed">
+        <div className="flex-1 overflow-y-auto p-4 sm:p-6">
+          <div className="bg-gray-50 rounded-xl p-3 sm:p-4 border">
+            <pre className="whitespace-pre-wrap text-xs sm:text-sm text-gray-800 font-mono leading-relaxed">
               {generateOrderTemplate()}
             </pre>
           </div>
         </div>
 
         {/* 액션 버튼들 */}
-        <div className="p-6 border-t border-gray-200 bg-gray-50">
-          <div className="flex flex-col sm:flex-row gap-3">
+        <div className="p-4 sm:p-6 border-t border-gray-200 bg-gray-50">
+          <div className="flex flex-col gap-3">
             <button
               onClick={handleCopy}
-              className={`flex-1 px-6 py-3 rounded-xl font-medium transition-colors duration-200 ${
+              className={`w-full px-4 py-3 rounded-xl font-medium transition-colors duration-200 ${
                 copied
                   ? 'bg-green-500 text-white'
                   : 'bg-blue-500 text-white hover:bg-blue-600'
@@ -139,14 +139,14 @@ export function OrderTemplateModal({
             </button>
             <button
               onClick={handleInstagramClick}
-              className="flex-1 px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-xl font-medium hover:from-purple-600 hover:to-pink-600 transition-all duration-200"
+              className="w-full px-4 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-xl font-medium hover:from-purple-600 hover:to-pink-600 transition-all duration-200"
             >
               📱 인스타그램으로 이동
             </button>
           </div>
 
           <div className="mt-4 text-center">
-            <p className="text-sm text-gray-600">
+            <p className="text-xs sm:text-sm text-gray-600">
               복사 후 인스타그램 DM에서{' '}
               <span className="font-semibold">@garangb_official</span>에게
               전송해주세요
