@@ -97,7 +97,7 @@ function OrderSection() {
   };
 
   const handleInstagramClick = () => {
-    window.open('https://www.instagram.com/garangb_official/', '_blank');
+    window.open('https://www.instagram.com/9a.rang.b/', '_blank');
   };
 
   if (isLoading) {
@@ -149,7 +149,7 @@ function OrderSection() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-8">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-40 pb-8">
         {/* 헤더 */}
         <div className="mb-8">
           <div className="flex items-center justify-between">
@@ -159,12 +159,6 @@ function OrderSection() {
                 선택한 엽서를 확인하고 주문을 진행하세요
               </p>
             </div>
-            <button
-              onClick={handleBackToHome}
-              className="px-4 py-2 text-gray-600 hover:text-gray-900 transition-colors"
-            >
-              ← 홈으로 돌아가기
-            </button>
           </div>
         </div>
 
@@ -299,8 +293,8 @@ function OrderSection() {
           </div>
 
           {/* 주문 요약 */}
-          <div className="lg:col-span-1 order-1 lg:order-2">
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 sticky top-24 lg:top-8 mb-6 lg:mb-0">
+          <div className="lg:col-span-1 order-2">
+            <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 mb-6 lg:mb-0">
               <h3 className="text-lg font-semibold text-gray-900 mb-6">
                 주문 요약
               </h3>
@@ -339,12 +333,12 @@ function OrderSection() {
 
               {/* 주문 문의 템플릿 */}
               {showTemplate && (
-                <div className="mt-6 p-4 bg-gray-50 rounded-xl border">
+                <div className="mt-6 rounded-xl">
                   <h3 className="text-lg font-semibold text-gray-900 mb-4">
                     📮 주문 문의 템플릿
                   </h3>
 
-                  <div className="bg-white rounded-lg p-4 border mb-4">
+                  <div className="bg-gray-100 rounded-lg p-4 border mb-4">
                     <pre className="whitespace-pre-wrap text-sm text-gray-800 font-mono leading-relaxed overflow-x-auto">
                       {generateOrderTemplate()}
                     </pre>
@@ -371,7 +365,7 @@ function OrderSection() {
 
                   <p className="text-xs text-gray-600 text-center mt-4">
                     복사 후 인스타그램 DM에서{' '}
-                    <span className="font-semibold">@garangb_official</span>에게
+                    <span className="font-semibold">@9a.rang.b</span>에게
                     전송해주세요
                   </p>
                 </div>
