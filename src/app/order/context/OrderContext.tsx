@@ -1,7 +1,7 @@
 'use client';
 
 import React, { createContext, useContext, useState, ReactNode } from 'react';
-import { Postcard, useSelectedPostcards } from '@/shared';
+import { useSelectedPostcards, type SelectedPostcard } from '@/shared';
 import { formatPrice } from '@/shared/lib/utils';
 
 interface OrderContextType {
@@ -15,7 +15,7 @@ interface OrderContextType {
   setCopied: (copied: boolean) => void;
 
   // 주문 데이터
-  selectedPostcards: Postcard[];
+  selectedPostcards: SelectedPostcard[];
   totalPrice: number;
   totalQuantity: number;
   isLoading: boolean;
