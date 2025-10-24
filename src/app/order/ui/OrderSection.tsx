@@ -21,12 +21,12 @@ function OrderSectionContent() {
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-8">
         {/* 페이지 헤더 */}
-        <header className="mb-8">
+        <div className="mb-8">
           <h2 className="text-3xl font-bold text-gray-900">주문 문의하기</h2>
           <p className="text-gray-600 mt-2">
             선택한 엽서를 확인하고 주문을 진행하세요
           </p>
-        </header>
+        </div>
 
         {/* 메인 콘텐츠 */}
         <main className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">

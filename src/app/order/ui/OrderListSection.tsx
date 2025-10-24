@@ -29,7 +29,7 @@ const OrderListSection = () => {
   return (
     <section className="lg:col-span-2 order-2 lg:order-1">
       <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
-        <header className="p-6 border-b border-gray-200">
+        <div className="p-6 border-b border-gray-200">
           <div className="flex items-center justify-between">
             <h2 className="text-xl font-semibold text-gray-900">
               선택된 엽서 ({selectedPostcards.length}개)
@@ -43,7 +43,7 @@ const OrderListSection = () => {
               </button>
             )}
           </div>
-        </header>
+        </div>
 
         <div className="divide-y divide-gray-200">
           {selectedPostcards.map(postcard => (
