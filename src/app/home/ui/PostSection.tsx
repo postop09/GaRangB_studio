@@ -1,7 +1,7 @@
 'use client';
 
 import { PostcardGrid } from '@/shared/ui';
-import { postcardsData, useSelectedPostcards } from '@/shared';
+import { Postcard, postcardsData, useSelectedPostcards } from '@/shared';
 import { useRouter } from 'next/navigation';
 
 function PostSection() {
@@ -14,7 +14,7 @@ function PostSection() {
     selectedCount,
   } = useSelectedPostcards();
 
-  const handlePostcardToggle = (postcard: any) => {
+  const handlePostcardToggle = (postcard: Postcard) => {
     if (isSelected(postcard.id)) {
       deselectPostcard(postcard.id);
     } else {
@@ -29,14 +29,14 @@ function PostSection() {
   return (
     <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
       {/* 섹션 헤더 */}
-      <header className="text-center mb-16 animate-fade-in-up">
+      <div className="text-center mb-16 animate-fade-in-up">
         <h2 className="font-brand text-4xl md:text-5xl font-semibold text-[#2c2c2c] mb-6">
           엽서 컬렉션
         </h2>
         <p className="font-brand-subtitle text-sm text-[#6b6b6b] max-w-2xl mx-auto">
           각 사진 속에 담긴 이야기와 감정을 엽서로 만나보세요
         </p>
-      </header>
+      </div>
 
       {/* 선택된 엽서 정보 및 주문 버튼 */}
       {selectedCount > 0 && (
